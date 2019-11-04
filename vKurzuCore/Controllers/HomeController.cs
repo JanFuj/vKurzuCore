@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using vKurzuCore.Data;
 using vKurzuCore.Models;
 
 namespace vKurzuCore.Controllers
@@ -12,14 +13,17 @@ namespace vKurzuCore.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly vKurzuDbContext applicationDbContext;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, vKurzuDbContext applicationDbContext)
         {
             _logger = logger;
         }
 
         public IActionResult Index()
         {
+           
+          //  applicationDbContext.AdminNotes.
             return View();
         }
 

@@ -7,24 +7,25 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using vKurzuCore.Data;
 using vKurzuCore.Models;
+using vKurzuCore.Repositories;
 
 namespace vKurzuCore.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly vKurzuDbContext applicationDbContext;
-
-        public HomeController(ILogger<HomeController> logger, vKurzuDbContext applicationDbContext)
+        private readonly IUnitOfWork _unitOfWork;
+        public HomeController(ILogger<HomeController> logger,
+            IUnitOfWork unitOfWork)
         {
             _logger = logger;
+            _unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
         {
-           
-          //  applicationDbContext.AdminNotes.
-            return View();
+            var model = _unitOfWork.AdminNotes.GetAll();
+            return View(model);
         }
 
         public IActionResult Privacy()

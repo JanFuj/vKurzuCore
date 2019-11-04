@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Http;
+using vKurzuCore.Repositories;
 
 namespace vKurzuCore
 {
@@ -75,6 +76,10 @@ namespace vKurzuCore
                 // requires using Microsoft.AspNetCore.Http;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+
+
+            services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
         }
 

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using vKurzuCore.Data;
 
 namespace vKurzuCore.Data.Migrations
 {
     [DbContext(typeof(vKurzuDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191104160728_ImageFileTable")]
+    partial class ImageFileTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -442,129 +444,6 @@ namespace vKurzuCore.Data.Migrations
                     b.ToTable("Tags");
                 });
 
-            modelBuilder.Entity("vKurzuCore.Models.TutorialCategory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Approved")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("Changed")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("Deleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("HeaderImage")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OwnerId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Position")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SocialSharingImage")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UrlTitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TutorialCategories");
-                });
-
-            modelBuilder.Entity("vKurzuCore.Models.TutorialPost", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Approved")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Body")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Changed")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("Deleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("HeaderImage")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OwnerId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Position")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RelatedCourseId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SocialSharingImage")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TutorialCategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UrlTitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TutorialCategoryId");
-
-                    b.ToTable("TutorialPosts");
-                });
-
-            modelBuilder.Entity("vKurzuCore.Models.TutorialPostTag", b =>
-                {
-                    b.Property<int>("TutorialPostId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TagId")
-                        .HasColumnType("int");
-
-                    b.HasKey("TutorialPostId", "TagId");
-
-                    b.HasIndex("TagId");
-
-                    b.ToTable("TutorialPostTag");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -660,30 +539,6 @@ namespace vKurzuCore.Data.Migrations
                     b.HasOne("vKurzuCore.Models.Tag", "Tag")
                         .WithMany("CourseTags")
                         .HasForeignKey("TagId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("vKurzuCore.Models.TutorialPost", b =>
-                {
-                    b.HasOne("vKurzuCore.Models.TutorialCategory", "Category")
-                        .WithMany("Posts")
-                        .HasForeignKey("TutorialCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("vKurzuCore.Models.TutorialPostTag", b =>
-                {
-                    b.HasOne("vKurzuCore.Models.Tag", "Tag")
-                        .WithMany("TutorialPostTags")
-                        .HasForeignKey("TagId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("vKurzuCore.Models.TutorialPost", "Post")
-                        .WithMany("TutorialPostTags")
-                        .HasForeignKey("TutorialPostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

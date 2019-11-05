@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using vKurzuCore.Data;
 using vKurzuCore.Models;
 using vKurzuCore.Repositories;
+using vKurzuCore.ViewModels;
 
 namespace vKurzuCore.Controllers
 {
@@ -15,17 +12,24 @@ namespace vKurzuCore.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IUnitOfWork _unitOfWork;
-        public HomeController(ILogger<HomeController> logger,
+        private readonly HomeViewModel _viewModel;
+
+        public HomeController(
+            ILogger<HomeController> logger,
             IUnitOfWork unitOfWork)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
+            _viewModel = new HomeViewModel();
         }
 
         public IActionResult Index()
         {
-            var model = _unitOfWork.AdminNotes.GetAll();
-            return View(model);
+            _viewModel.Courses = _unitOfWork.Courses.GetPublishedCourses().ToList();
+            _viewModel.TutorialCategories = _unitOfWork.TutorialCategories.GetPublishedTutorialCategories().ToList();
+            _viewModel.Blogs = _unitOfWork.Blogs.GetFirst3BlogPosts().ToList();
+            _viewModel.ShowAlert = !string.IsNullOrEmpty(TempData["EmailSent"]?.ToString());
+            return View(_viewModel);
         }
 
         public IActionResult Privacy()

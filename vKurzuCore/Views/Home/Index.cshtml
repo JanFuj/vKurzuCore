@@ -1,4 +1,4 @@
-﻿@model List<AdminNote>
+﻿@model vKurzuCore.ViewModels.HomeViewModel
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -6,9 +6,9 @@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    @foreach (var adminNote in Model)
+    @foreach (var course in Model.Courses)
     {
-        <p>@adminNote.Note</p>
+        <p>@course.Name</p>
     }
 
 </div>

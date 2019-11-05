@@ -8,6 +8,9 @@ namespace vKurzuCore.Repositories
     public interface IUnitOfWork : IDisposable
     {
         IAdminNoteRepository AdminNotes { get; }
+        ICourseRepository Courses { get; }
+        ITutorialCategoryRepository TutorialCategories { get; }
+        IBlogRepository Blogs { get; }
         int Save();
     }
 }

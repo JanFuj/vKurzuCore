@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Http;
 using vKurzuCore.Repositories;
+using vKurzuCore.Models;
 
 namespace vKurzuCore
 {
@@ -33,11 +34,11 @@ namespace vKurzuCore
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<vKurzuDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddMvc();
-
             services.Configure<IdentityOptions>(options =>
             {
                 // Password settings.
@@ -52,9 +53,7 @@ namespace vKurzuCore
                 options.Lockout.MaxFailedAccessAttempts = 5;
                 options.Lockout.AllowedForNewUsers = true;
 
-                // User settings.
-                options.User.AllowedUserNameCharacters =
-                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+              
                 options.User.RequireUniqueEmail = true;
             });
 
@@ -84,7 +83,7 @@ namespace vKurzuCore
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env )
         {
             if (env.IsDevelopment())
             {

@@ -13,6 +13,7 @@ namespace vKurzuCore.Repositories
         public ICourseRepository Courses { get; private set; }
         public ITutorialCategoryRepository TutorialCategories { get; private set; }
         public IBlogRepository Blogs { get; private set; }
+        public ISvgRepository Svgs { get; private set; }
 
         private readonly vKurzuDbContext _context;
         public UnitOfWork(vKurzuDbContext context)
@@ -22,6 +23,7 @@ namespace vKurzuCore.Repositories
             Courses = new CourseRepository(_context);
             TutorialCategories = new TutorialCategoryRepository(_context);
             Blogs = new BlogRepository(_context);
+            Svgs = new SvgRepository(_context);
         }
         public int Save()
         {

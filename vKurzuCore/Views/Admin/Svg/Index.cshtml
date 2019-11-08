@@ -1,0 +1,41 @@
+﻿@model System.Collections.Generic.List<vKurzuCore.Models.Svg>
+
+<partial name="~/Views/Admin/_adminLoginPartial.cshtml" />
+<main>
+    <div class="admin-list-header">
+        <h1>Svg</h1>
+        <a class="button" asp-action="New" asp-controller="Svg">Vytvořit</a>
+    </div>
+
+
+
+    <ul class="admin-list">
+
+        @foreach (var item in Model)
+        {
+            <li class="admin-list__item">
+                <div class="admin-list__cell admin-list__cell--info">
+                    <div class="">@Html.DisplayFor(modelItem => item.Name)</div>
+                </div>
+                <div class="svg-picker">
+                    <div class="svg-picker__item">
+                        <svg viewBox="0 0 128 128">
+                            <linearGradient id="gradient" x1="0%" y1="0%" x2="66%" y2="100%">
+                                <stop offset="0%" stop-color="var(--grad-1)"></stop>
+                                <stop offset="100%" stop-color="var(--grad-2)"></stop>
+                            </linearGradient>
+                            @Html.Raw(item.Path)
+                        </svg>
+                    </div>
+                </div>
+                <div class="admin-list__cell admin-list__cell--buttons">
+                    @Html.ActionLink("Upravit", "EditSvg", new { id = item.Id }, new { @class = "link--gradient" })
+                    @Html.ActionLink("Smazat", "DeleteSvg", new { id = item.Id }, new { @class = "link--gradient" })
+                </div>
+            </li>
+
+        }
+    </ul>
+
+</main>
+

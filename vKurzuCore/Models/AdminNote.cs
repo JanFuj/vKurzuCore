@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace vKurzuCore.Models
 {
-    public class AdminNote
+    public class AdminNote : BaseModel
     {
-        public int Id { get; set; }
         public string Note { get; set; }
     }
 }

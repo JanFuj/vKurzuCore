@@ -57,6 +57,11 @@ namespace vKurzuCore.Data
                 .HasOne(bt => bt.Tag)
                 .WithMany(b => b.TutorialPostTags)
                 .HasForeignKey(bt => bt.TagId);
+
+            builder.Entity<Svg>()
+                .HasIndex(b => b.Name)
+                .IsUnique();
+
         }
     }
 }

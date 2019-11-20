@@ -1,0 +1,31 @@
+﻿@model vKurzuCore.ViewModels.Admin.SvgViewModel
+
+@{
+    ViewBag.Title = "Edit svg";
+}
+
+<partial name="_adminLoginPartial" />
+<main>
+    <h3>Vytvořit svg</h3>
+    <form class="admin-form" asp-controller="Svg" asp-action="Edit" asp-route-id="@Model.Id" method="post">
+        <div>
+            <hr />
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input hidden asp-for="Id" />
+            <p>
+                <label asp-for="Name"></label>
+                <input asp-for="Name" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </p>
+            <p>
+                <label asp-for="Path"></label>
+                <textarea asp-for="Path"></textarea>
+                <span asp-validation-for="Path" class="text-danger"></span>
+            </p>
+            <div>
+                <button type="submit" id="save">Upravit</button>
+            </div>
+        </div>
+    </form>
+</main>
+

@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace vKurzuCore.Models
 {
-    public class Svg
+    public class Svg : BaseModel
     {
-        public int Id { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]

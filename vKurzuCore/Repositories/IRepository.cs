@@ -8,8 +8,8 @@ namespace vKurzuCore.Repositories
 {
     public interface IRepository<TEntity> where TEntity : class
     {
-        TEntity Get(int id);
-        IEnumerable<TEntity> GetAll();
+        Task<TEntity> FindByIdAsync(int id);
+        Task<IEnumerable<TEntity>> GetAllAsync();
         IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate);
 
         void Add(TEntity entity);

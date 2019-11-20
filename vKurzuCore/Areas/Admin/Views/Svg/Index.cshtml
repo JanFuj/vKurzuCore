@@ -1,6 +1,6 @@
-﻿@model System.Collections.Generic.List<vKurzuCore.Models.Svg>
+﻿@model System.Collections.Generic.IEnumerable<vKurzuCore.Models.Svg>
 
-<partial name="~/Views/Admin/_adminLoginPartial.cshtml" />
+<partial name="_adminLoginPartial" />
 <main>
     <div class="admin-list-header">
         <h1>Svg</h1>
@@ -29,8 +29,8 @@
                     </div>
                 </div>
                 <div class="admin-list__cell admin-list__cell--buttons">
-                    @Html.ActionLink("Upravit", "EditSvg", new { id = item.Id }, new { @class = "link--gradient" })
-                    @Html.ActionLink("Smazat", "DeleteSvg", new { id = item.Id }, new { @class = "link--gradient" })
+                    <a class="link--gradient" asp-controller="Svg" asp-action="Edit" asp-route-id="@item.Id">Upravit</a>
+                    <a class="link--gradient" asp-controller="Svg" asp-action="Delete" asp-route-id="@item.Id">Smazat</a>
                 </div>
             </li>
 

@@ -1,0 +1,58 @@
+﻿@model vKurzuCore.ViewModels.PersonViewModel
+@using vKurzuCore.Helpers;
+@using Microsoft.AspNetCore.Identity;
+@{
+    ViewBag.Title = "Admin Uživatelé";
+}
+
+<partial name="_adminLoginPartial" />
+<main>
+    <div class="admin-list-header">
+        <h1>Uživatelé</h1>
+        <a class="button" asp-action="New" asp-controller="Person">Přidat lektora</a>
+    </div>
+
+
+    <ul class="admin-list">
+
+        @if (Model.Admins.Any())
+        {
+            <h3>Admin</h3>
+            Model.Admins.ForEach(admin =>
+                RenderActions(admin)
+            );
+        }
+        @if (Model.Lectors.Any())
+        {
+            <h3>Lectors</h3>
+            Model.Lectors.ForEach(lector =>
+                RenderActions(lector)
+            );
+        }
+        @if (Model.Users.Any())
+        {
+            <h3>Lectors</h3>
+            Model.Users.ForEach(user =>
+                RenderActions(user)
+            );
+        }
+
+    </ul>
+
+</main>
+
+@{
+    void RenderActions(IdentityUser user)
+    {
+        <li class="admin-list__item">
+            <div class="admin-list__cell admin-list__cell--info">
+                <div class="">@Html.DisplayFor(modelItem => user.Email)</div>
+            </div>
+
+            <div class="admin-list__cell admin-list__cell--buttons">
+                @Html.ActionLink("Upravit", "EditPerson", new { id = user.Id }, new { @class = "link--gradient" })
+                @Html.ActionLink("Smazat", "DeletePerson", new { id = user.Id }, new { @class = "link--gradient" })
+            </div>
+        </li>
+    }
+}

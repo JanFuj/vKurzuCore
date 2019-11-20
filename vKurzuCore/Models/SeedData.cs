@@ -13,7 +13,7 @@ namespace vKurzuCore.Models
     {
         public static async Task Initialize(IServiceProvider serviceProvider, string adminUserName, string adminPw)
         {
-            string[] roles = new string[] { Helpers.Contants.Admin, Helpers.Contants.Lector, Helpers.Contants.User };
+            string[] roles = new string[] { Helpers.Constants.Roles.Admin, Helpers.Constants.Roles.Lector, Helpers.Constants.Roles.User };
 
             using (var context = new vKurzuDbContext(serviceProvider.GetRequiredService<DbContextOptions<vKurzuDbContext>>()))
             {
@@ -48,7 +48,7 @@ namespace vKurzuCore.Models
                 IdentityResult userResult = await userManager.CreateAsync(user, testUserPw);
                 if (userResult.Succeeded)
                 {
-                    var result = await userManager.AddToRoleAsync(user, Helpers.Contants.Admin);
+                    var result = await userManager.AddToRoleAsync(user, Helpers.Constants.Roles.Admin);
                     if (result.Succeeded)
                     {
 

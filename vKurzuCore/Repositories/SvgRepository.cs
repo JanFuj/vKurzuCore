@@ -1,4 +1,6 @@
-﻿using vKurzuCore.Data;
+﻿using System.Collections.Generic;
+using System.Linq;
+using vKurzuCore.Data;
 using vKurzuCore.Models;
 
 namespace vKurzuCore.Repositories
@@ -14,6 +16,10 @@ namespace vKurzuCore.Repositories
         public SvgRepository(vKurzuDbContext context) : base(context)
         {
 
+        }
+        public IEnumerable<Svg> GetAllSvgs()
+        {
+            return vKurzuDbContext.Svgs.Where(c => !c.Deleted).OrderBy(c => c.Position).ToList();
         }
     }
 }

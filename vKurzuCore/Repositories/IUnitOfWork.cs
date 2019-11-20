@@ -12,6 +12,9 @@ namespace vKurzuCore.Repositories
         ITutorialCategoryRepository TutorialCategories { get; }
         IBlogRepository Blogs { get; }
         ISvgRepository Svgs { get; }
+        IImageRepository Images { get; }
+
         int Save();
+        Task<int> SaveAsync();
     }
 }

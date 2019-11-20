@@ -8,5 +8,6 @@ namespace vKurzuCore.Repositories
 {
     public interface ISvgRepository : IRepository<Svg>
     {
+        IEnumerable<Svg> GetAllSvgs();
     }
 }

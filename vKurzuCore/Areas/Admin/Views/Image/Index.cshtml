@@ -1,0 +1,54 @@
+﻿@model IEnumerable<vKurzuCore.Models.ImageFile>
+
+<partial name="_adminLoginPartial" />
+<main>
+    <div class="admin-list-header">
+        <h1>Obrázky</h1>
+        <a class="button" asp-action="New" asp-controller="Image">Přidat obrázek</a>
+    </div>
+
+    <ul class="admin-list">
+        @foreach (var item in Model)
+        {
+            <li class="admin-list__item">
+
+                <div class="admin-list__cell admin-list__cell--info">
+                    <div class="">@Html.DisplayFor(modelItem => item.FileName)</div>
+                    <div class="">@Html.DisplayFor(modelItem => item.Description)</div>
+                </div>
+
+                <div class="svg-picker">
+                    <img id="@item.Id" src="~/uploads/@item.FileName" style="width: 200px;" />
+                </div>
+
+                <a class="link--gradient" onclick="myFunction(@item.Id)">Kopírovat url</a>
+                <input readonly type="text" value="/uploads/@item.FileName" id="input_@item.Id">
+                <div class="admin-list__cell admin-list__cell--buttons">
+                    <a class="link--gradient" asp-controller="Image" asp-action="Delete" asp-route-id="@item.Id">Smazat</a>
+                </div>
+            </li>
+        }
+    </ul>
+
+</main>
+
+@section scripts {
+    <script>
+
+        function myFunction(id) {
+
+            console.log(id);
+            /* Get the text field */
+            var copyText = document.getElementById("input_" + id);
+            /* Select the text field */
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+
+            /* Copy the text inside the text field */
+            document.execCommand("copy");
+
+            /* Alert the copied text */
+            //   alert("Copied the text: " + copyText.value);
+        }
+    </script>
+}

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,13 +13,23 @@ namespace vKurzuCore.Services
     public class EmailSender : IEmailSender , IMyEmailSender
     {
         private const string SenderAdress = "neodpovidat@vkurzu.cz";
+        private readonly IConfiguration _configuration;
+        private readonly string _emailPassword;
+        private readonly string _adminEmails;
+
+        public EmailSender(IConfiguration configuration)
+        {
+            _configuration = configuration;
+            _emailPassword = _configuration.GetSection("AdminData")["EmailPassword"];
+            _adminEmails = _configuration.GetSection("AdminData")["AdminEmails"];
+        }
         public  async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
             try
             {
 
                 using (var client = new SmtpClient("smtp.forpsi.com", 587)
-                { EnableSsl = true, Credentials = new NetworkCredential(SenderAdress, "Aaaa1111@") })
+                { EnableSsl = true, Credentials = new NetworkCredential(SenderAdress, _emailPassword) })
                 {
                     await client.SendMailAsync(new MailMessage()
                     {
@@ -51,11 +62,10 @@ namespace vKurzuCore.Services
                 var client = new SmtpClient("smtp.forpsi.com", 587) //465
                 {
                     EnableSsl = true,
-                    Credentials = new NetworkCredential(SenderAdress, "Aaaa1111@"),
+                    Credentials = new NetworkCredential(SenderAdress, _emailPassword),
 
                 };
-                // odeslání emailu (od koho, komu, předmět, zpráva)
-                await client.SendMailAsync(SenderAdress, "janfujdiar@seznam.cz, daniel.hruska@me.com, podpora@vkurzu.cz", subject, body);
+                await client.SendMailAsync(SenderAdress, _adminEmails, subject, body);
 
                 return true;
             }

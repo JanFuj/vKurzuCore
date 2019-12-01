@@ -1,0 +1,92 @@
+﻿@model vKurzuCore.ViewModels.Course.CourseViewModel
+
+@{
+    ViewBag.Title = "vKurzu.cz - " + Model.Course.Name;
+}
+
+
+<body class="body body-course" data-gradient="@Model.Course.Modificator">
+    <header class="header header--course header--up-top" id="site-header">
+        <partial name="_toolbar" />
+    </header>
+
+    <main class="main">
+        <div class="intro intro--course">
+            <div class="course-image"><svg viewBox="0 0 128 128" role="img"><linearGradient id="@Model.Course.Modificator" x2="0" y2="1"><stop offset="0%" stop-color="var(--grad-1)" /><stop offset="100%" stop-color="var(--grad-2)" /></linearGradient>@Html.Raw(Model.Course.Svg.Path)</svg></div>
+            <div class="course-texts">
+                <h1 class="course-title">@Model.Course.Name</h1>
+                <p class="h4 course-desc">@Model.Course.Description</p>
+            </div>
+            <div class="banner banner--course">
+                <div class="banner__top"></div>
+                <div class="banner__bottom"></div>
+                <div class="banner__content-wrapper">
+                    <div class="banner__content">
+                        <p>
+                            <div id="editorWillLearn"></div>
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <article class="course">
+            <p>
+                <div id="editorBody"></div>
+            </p>
+
+
+            <form id="Form" class="reg-form" asp-action="SendEmail" method="post">
+                <h2 class="h4 reg-form__title">Chci vědět více</h2>
+                <div class="reg-form__content">
+
+                    <input asp-for="@Model.FormModel.Name" placeholder="Jméno" />
+                    <span asp-validation-for="@Model.FormModel.Name" class="text-danger"></span>
+
+                    <input asp-for="@Model.FormModel.Surname" placeholder="Přijmení" />
+                    <span asp-validation-for="@Model.FormModel.Surname" class="text-danger"></span>
+
+                    <input asp-for="@Model.FormModel.Email" placeholder="E-mail" type="email" />
+                    <span asp-validation-for="@Model.FormModel.Email" class="text-danger"></span>
+
+                    <input asp-for="@Model.Course.UrlTitle" hidden />
+
+                    <button class="reg-form__button" type="submit">Odeslat</button>
+                </div>
+            </form>
+        </article>
+    </main>
+
+</body>
+
+@section scripts {
+
+    <script type="text/javascript">
+    let quill = new Quill('#editorWillLearn',
+        {
+
+            });
+    let quillBody = new Quill('#editorBody',
+        {
+
+        });
+
+    $(document).ready(function () {
+        console.log()
+
+        quill.setContents(@Html.Raw(@Model.Course.WillLearn))
+        quill.enable(false);
+
+        quillBody.setContents(@Html.Raw(Model.Course.Body))
+        quillBody.enable(false);
+    });
+
+    @{
+            if (TempData["EmailSent"] != null){
+              @: Swal.fire('Děkujeme','Brzy se ozveme','success');
+            }
+         }
+    </script>
+}
+
+

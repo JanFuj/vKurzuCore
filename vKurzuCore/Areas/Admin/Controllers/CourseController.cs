@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -23,11 +24,15 @@ namespace vKurzuCore.Areas.Admin.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly string _loggedUserId;
 
-        public CourseController(IUnitOfWork unitOfWork, UserManager<IdentityUser> userManager)
+        public CourseController(IUnitOfWork unitOfWork,
+            UserManager<IdentityUser> userManager,
+            IHttpContextAccessor contextAccessor)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
+            _loggedUserId = _userManager.GetUserId(contextAccessor.HttpContext.User);
         }
 
         // GET: Admin/Course
@@ -35,7 +40,6 @@ namespace vKurzuCore.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
-
             var courses = await _unitOfWork.Courses.GetAllAsync();
             if (User.IsInRole(Constants.Roles.Lector))
             {
@@ -114,6 +118,7 @@ namespace vKurzuCore.Areas.Admin.Controllers
                         SocialSharingImage = viewModel.Course.SocialSharingImage,
                         Svg = await _unitOfWork.Svgs.FindByIdAsync(viewModel.Course.SvgId),
                         Modificator = viewModel.Course.Modificator,
+                        OwnerId = _loggedUserId,
                         Approved = false,
                     };
 
@@ -137,92 +142,130 @@ namespace vKurzuCore.Areas.Admin.Controllers
             return View(viewModel);
         }
 
-        //// GET: Admin/Course/Edit/5
-        //public async Task<IActionResult> Edit(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
+        // GET: Admin/Course/Edit/5
+        [Route("edit/{id}")]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var course = await _unitOfWork.Courses.FindByIdAsync(id);
 
-        //    var courseDto = await _context.CourseDto.FindAsync(id);
-        //    if (courseDto == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    ViewData["SvgId"] = new SelectList(_context.Svgs, "Id", "Name", courseDto.SvgId);
-        //    return View(courseDto);
-        //}
+            if (course == null || (User.IsInRole(Constants.Roles.Lector) && course.OwnerId != _loggedUserId)) return NotFound();
 
-        //// POST: Admin/Course/Edit/5
-        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,WillLearn,Body,SvgId,Modificator,UrlTitle,HeaderImage,SocialSharingImage")] CourseDto courseDto)
-        //{
-        //    if (id != courseDto.Id)
-        //    {
-        //        return NotFound();
-        //    }
+            var courseDto = new CourseDto()
+            {
+                Id = course.Id,
+                Name = course.Name,
+                Description = course.Description,
+                WillLearn = course.WillLearn,
+                Body = course.Body,
+                UrlTitle = course.UrlTitle,
+                SocialSharingImage = course.SocialSharingImage,
+                SvgId = course.SvgId,
+                Modificator = course.Modificator,
+                Approved = false,
+            };
+            var svgs = await _unitOfWork.Svgs.GetAllAsync();
+            var tags = await _unitOfWork.Tags.GetAllAsync();
 
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            _context.Update(courseDto);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!CourseDtoExists(courseDto.Id))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    ViewData["SvgId"] = new SelectList(_context.Svgs, "Id", "Name", courseDto.SvgId);
-        //    return View(courseDto);
-        //}
+            var viewModel = new CourseViewModel()
+            {
+                Course = courseDto,
+                Tags = tags.ToList(),
+                Svgs = svgs.ToList(),
+            };
+            return View(viewModel);
+        }
 
-        //// GET: Admin/Course/Delete/5
-        //public async Task<IActionResult> Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
+        // POST: Admin/Course/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit/{id}")]
+        public async Task<IActionResult> Edit(CourseViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var courseToUpdate = await _unitOfWork.Courses.FindByIdAsync(viewModel.Course.Id);
+                    if (courseToUpdate == null || (User.IsInRole(Constants.Roles.Lector) && courseToUpdate.OwnerId != _loggedUserId)) return NotFound();
+                    courseToUpdate.Id = viewModel.Course.Id;
+                    courseToUpdate.Name = viewModel.Course.Name;
+                    courseToUpdate.Description = viewModel.Course.Description;
+                    courseToUpdate.WillLearn = viewModel.Course.WillLearn;
+                    courseToUpdate.Body = viewModel.Course.Body;
+                    courseToUpdate.UrlTitle = viewModel.Course.UrlTitle;
+                    courseToUpdate.SocialSharingImage = viewModel.Course.SocialSharingImage;
+                    courseToUpdate.SvgId = viewModel.Course.SvgId;
+                    courseToUpdate.Modificator = viewModel.Course.Modificator;
 
-        //    var courseDto = await _context.CourseDto
-        //        .Include(c => c.Svg)
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (courseDto == null)
-        //    {
-        //        return NotFound();
-        //    }
+                    await _unitOfWork.SaveAsync();
+                    return RedirectToAction(nameof(Index));
 
-        //    return View(courseDto);
-        //}
+                }
+                catch (DbUpdateException sqlEx) when (sqlEx.InnerException.HResult == (-2146232060))
+                {
+                    ModelState.AddModelError("Course.UrlTitle", "Zadane url již existuje");
+                }
+                catch (Exception e)
+                {
+                    ModelState.AddModelError("", e.InnerException.Message);
+                }
+            }
 
-        //// POST: Admin/Course/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> DeleteConfirmed(int id)
-        //{
-        //    var courseDto = await _context.CourseDto.FindAsync(id);
-        //    _context.CourseDto.Remove(courseDto);
-        //    await _context.SaveChangesAsync();
-        //    return RedirectToAction(nameof(Index));
-        //}
+            var svgs = await _unitOfWork.Svgs.GetAllAsync();
+            var tags = await _unitOfWork.Tags.GetAllAsync();
+            viewModel.Svgs = svgs.ToList();
+            viewModel.Tags = tags.ToList();
+            return View(viewModel);
+        }
 
-        //private bool CourseDtoExists(int id)
-        //{
-        //    return _context.CourseDto.Any(e => e.Id == id);
-        //}
+        // GET: Admin/Course/Delete/5
+        [Route("delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var courseToDelete = await _unitOfWork.Courses.FindByIdAsync(id);
+            if (courseToDelete == null || (User.IsInRole(Constants.Roles.Lector) && courseToDelete.OwnerId != _loggedUserId)) return NotFound();
+
+            var courseDto = new CourseDto()
+            {
+                Id = courseToDelete.Id,
+                Name = courseToDelete.Name,
+            };
+            return View(courseDto);
+        }
+
+        // POST: Admin/Course/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete/{id}")]
+        public async Task<IActionResult> Delete(CourseDto courseDto)
+        {
+            var courseToDelete = await _unitOfWork.Courses.FindByIdAsync(courseDto.Id);
+            if (courseToDelete == null || (User.IsInRole(Constants.Roles.Lector) && courseToDelete.OwnerId != _loggedUserId)) return NotFound();
+            _unitOfWork.Courses.Remove(courseToDelete);
+            await _unitOfWork.SaveAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize(Roles = Constants.Roles.Admin)]
+        [Route("approvecourse")]
+        public async Task<IActionResult> ApproveCourse(int id, bool approve)
+        {
+            try
+            {
+                var courseToApprove = await _unitOfWork.Courses.FindByIdAsync(id);
+                if (courseToApprove == null) return NotFound();
+
+                courseToApprove.Approved = approve;
+                await _unitOfWork.SaveAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
     }
 }

@@ -5,7 +5,7 @@
         <div class="admin-cards">
             <div class="card card--clickable card--admin">
                 <div class="card__content">
-                    <a class="card__link" href="@Url.Action("Course","Admin")"></a>
+                    <a class="card__link" asp-action="Index" asp-controller="Course"></a>
                     <div class="card__image">
                         <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
                              class="svg-inline--fa fa-graduation-cap fa-w-20" data-icon="graduation-cap"
@@ -67,7 +67,7 @@
             </div>
             <div class="card card--clickable card--admin">
                 <div class="card__content">
-                    <a class="card__link" href="@Url.Action("Tag","Admin")"></a>
+                    <a class="card__link" asp-action="Index" asp-controller="Tag"></a>
                     <div class="card__image">
                         <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
                              class="svg-inline--fa fa-hashtag fa-w-14" data-icon="hashtag" data-prefix="fas"

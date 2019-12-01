@@ -1,0 +1,24 @@
+﻿@model vKurzuCore.ViewModels.Admin.TagViewModel
+
+@{
+    ViewBag.Title = "Edit tag";
+}
+
+<partial name="_adminLoginPartial" />
+<main>
+    <h3>Upravit svg</h3>
+    <form class="admin-form"  asp-action="Edit" asp-route-id="@Model.Id" method="post">
+        <div class="form-horizontal">
+            <hr />
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input hidden asp-for="Id" />
+                <label asp-for="Name"></label>
+                <input asp-for="Name" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </p>        
+            <div>
+                <button type="submit" id="save">Upravit</button>
+            </div>
+        </div>
+    </form>
+</main>

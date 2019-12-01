@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using vKurzuCore.Helpers;
 using vKurzuCore.Models;
@@ -29,7 +26,10 @@ namespace vKurzuCore.Areas.Admin.Controllers
         [Route("")]
         public async Task<IActionResult> Index()
         {
-            return View(await _unitOfWork.Svgs.GetAllAsync()); ;
+            var svgs = await _unitOfWork.Svgs.GetAllAsync();
+            var viewModels = svgs.Select(
+                svg => new SvgViewModel() { Id = svg.Id, Name = svg.Name, Path = svg.Path });
+            return View(viewModels); 
         }
 
         [Route("new")]

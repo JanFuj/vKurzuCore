@@ -1,0 +1,92 @@
+﻿@model IEnumerable<vKurzuCore.ViewModels.Dto.CourseDto>
+@using vKurzuCore.Helpers
+
+@{
+    ViewBag.Title = "Admin Kurz";
+}
+
+<partial name="_adminLoginPartial" />
+<main class="main">
+
+
+    <div class="admin-list-header">
+        <h1>Kurzy</h1>
+        <a class="button" asp-action="New">Nový kurz</a>
+    </div>
+
+    <ul class="admin-list" id="sortable">
+        @foreach (var item in Model)
+        {
+            <li class="admin-list__item" id="@item.Id">
+                <div class="admin-list__cell admin-list__cell--info">
+                    <div class="">@Html.DisplayFor(modelItem => item.Name)</div>
+                </div>
+                <div class="admin-list__cell admin-list__cell--buttons">
+                    <a class="link--gradient" asp-action="Edit" asp-route-id="@item.Id">Upravit</a>
+                    <a class="link--gradient" asp-action="Details" asp-route-urltitle="@item.UrlTitle">Náhled</a>
+                    <a class="link--gradient" asp-action="Delete" asp-route-id="@item.Id">Smazat</a>
+                    @if (User.IsInRole(Constants.Roles.Admin))
+                    {
+                        if (item.Approved)
+                        {
+                            <a class="link--gradient" asp-action="ApproveCourse" asp-route-id="@item.Id" asp-route-approve="@false">Od-Publikovat</a>
+                        }
+                        else
+                        {
+                            <a class="link--gradient" asp-action="ApproveCourse" asp-route-id="@item.Id" asp-route-approve="@true">Od-Publikovat</a>
+                        }
+                    }
+                </div>
+            </li>
+
+        }
+    </ul>
+
+</main>
+
+@section scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+
+    <script>
+        $(function () {
+
+            if ((@User.IsInRole(Constants.Roles.Admin).ToString().ToLower())) {
+
+            $("#sortable").sortable({
+                axis: 'y',
+                update: function () {
+                    let order = 1;
+                    let model = [];
+                    let sortableli = 1
+                    $("#sortable li").each(function () {
+                        //building a new object and pushing in modal array
+                        //Here I am setting OrderNo property which is i am using in my db and building my object
+                        var objModel = { Id: this.id, position: order }; //This is for example to build your object and push in a modal array.
+                        model.push(objModel);
+                        order++;
+                    });
+                    console.log(model);
+                    if (model.length > 1)
+                    {
+                        $.ajax({
+                            type: "POST",
+                            contentType: "application/json; charset=utf-8",
+                            url: '@Url.Action("UpdateCourseOrder", "Admin")', //This is my url put your url here and pass model as data it is an array of my items
+                            data: JSON.stringify(model),
+                            success: function (data) {
+                                console.log("position changed");
+                            },
+                            error: function (e) {
+                                //do something
+                            }
+                        });
+                    }
+                }
+            }
+            );
+            $("#sortable").disableSelection();
+
+            }
+        });
+    </script>
+}

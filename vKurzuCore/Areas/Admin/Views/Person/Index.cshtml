@@ -1,15 +1,16 @@
-﻿@model vKurzuCore.ViewModels.PersonViewModel
+﻿@model vKurzuCore.ViewModels.Admin.PersonViewModel
 @using vKurzuCore.Helpers;
 @using Microsoft.AspNetCore.Identity;
+@inject UserManager<IdentityUser> _usermanager;
 @{
     ViewBag.Title = "Admin Uživatelé";
+
 }
 
 <partial name="_adminLoginPartial" />
 <main>
     <div class="admin-list-header">
         <h1>Uživatelé</h1>
-        <a class="button" asp-action="New" asp-controller="Person">Přidat lektora</a>
     </div>
 
 
@@ -19,21 +20,21 @@
         {
             <h3>Admin</h3>
             Model.Admins.ForEach(admin =>
-                RenderActions(admin)
+                RenderActions(admin, Constants.Roles.Admin)
             );
         }
         @if (Model.Lectors.Any())
         {
             <h3>Lectors</h3>
             Model.Lectors.ForEach(lector =>
-                RenderActions(lector)
+                RenderActions(lector, Constants.Roles.Lector)
             );
         }
         @if (Model.Users.Any())
         {
-            <h3>Lectors</h3>
+            <h3>Users</h3>
             Model.Users.ForEach(user =>
-                RenderActions(user)
+                RenderActions(user, Constants.Roles.User)
             );
         }
 
@@ -42,17 +43,27 @@
 </main>
 
 @{
-    void RenderActions(IdentityUser user)
+    void RenderActions(IdentityUser user, string role)
     {
         <li class="admin-list__item">
             <div class="admin-list__cell admin-list__cell--info">
                 <div class="">@Html.DisplayFor(modelItem => user.Email)</div>
             </div>
+            @if (role != Constants.Roles.Admin)
+            {
+                <div class="admin-list__cell admin-list__cell--buttons">
+                    @if (role == Constants.Roles.Lector)
+                    {
+                        @Html.ActionLink("Uživatel", "touser", new { id = user.Id }, new { @class = "link--gradient" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Lektor", "tolector", new { id = user.Id }, new { @class = "link--gradient" })
+                    }
+                    @Html.ActionLink("Smazat", "Delete", new { id = user.Id }, new { @class = "link--gradient" })
+                </div>
+            }
 
-            <div class="admin-list__cell admin-list__cell--buttons">
-                @Html.ActionLink("Upravit", "EditPerson", new { id = user.Id }, new { @class = "link--gradient" })
-                @Html.ActionLink("Smazat", "DeletePerson", new { id = user.Id }, new { @class = "link--gradient" })
-            </div>
         </li>
     }
 }

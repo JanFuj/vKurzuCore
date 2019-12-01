@@ -13,6 +13,7 @@ namespace vKurzuCore.Repositories
         IBlogRepository Blogs { get; }
         ISvgRepository Svgs { get; }
         IImageRepository Images { get; }
+        ITagRepository Tags { get; }
 
         int Save();
         Task<int> SaveAsync();

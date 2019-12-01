@@ -1,4 +1,4 @@
-﻿@model System.Collections.Generic.IEnumerable<vKurzuCore.Models.Svg>
+﻿@model System.Collections.Generic.IEnumerable<vKurzuCore.ViewModels.Admin.SvgViewModel>
 
 <partial name="_adminLoginPartial" />
 <main>
@@ -6,9 +6,6 @@
         <h1>Svg</h1>
         <a class="button" asp-action="New" asp-controller="Svg">Vytvořit</a>
     </div>
-
-
-
     <ul class="admin-list">
 
         @foreach (var item in Model)
@@ -33,9 +30,7 @@
                     <a class="link--gradient" asp-controller="Svg" asp-action="Delete" asp-route-id="@item.Id">Smazat</a>
                 </div>
             </li>
-
         }
     </ul>
-
 </main>
 

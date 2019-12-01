@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using vKurzuCore.Helpers;
 
 namespace vKurzuCore.Areas.Identity.Pages.Account
 {
@@ -78,6 +79,7 @@ namespace vKurzuCore.Areas.Identity.Pages.Account
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
+                   await  _userManager.AddToRoleAsync(user, Constants.Roles.User);
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

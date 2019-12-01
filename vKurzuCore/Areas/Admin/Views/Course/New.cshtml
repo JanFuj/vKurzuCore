@@ -1,0 +1,260 @@
+﻿@model vKurzuCore.ViewModels.Admin.CourseViewModel
+@{
+    ViewBag.Title = "Nový kurz";
+}
+
+<partial name="_adminLoginPartial" />
+<main class="main">
+    <h1>Vytvořit nový kurz</h1>
+    <form class="admin-form" asp-controller="Course" asp-action="New" method="post" id="mySubmitForm">
+
+        <p class="form-item">
+            <label asp-for="@Model.Course.Name"></label>
+            <input asp-for="@Model.Course.Name" />
+            <span asp-validation-for="@Model.Course.Name" class="text-danger"></span>
+        </p>
+
+        <p class="form-item">
+            <label asp-for="@Model.Course.Description"></label>
+            <input asp-for="@Model.Course.Description" />
+            <span asp-validation-for="@Model.Course.Description" class="text-danger"></span>
+        </p>
+
+        <p class="form-item">
+            <label asp-for="@Model.Course.WillLearn"></label>
+            <input asp-for="@Model.Course.WillLearn" hidden />
+            <span asp-validation-for="@Model.Course.WillLearn" class="text-danger"></span>
+            <div class="quill--will-learn">
+                <div id="toolbarWillLearn"></div>
+                <div id="editorWillLearn"></div>
+            </div>
+        </p>
+
+        <p class="form-item">
+            <label asp-for="@Model.Course.Body"></label>
+            <input asp-for="@Model.Course.Body" hidden />
+            <span asp-validation-for="@Model.Course.Body" class="text-danger"></span>
+            <div>
+                <div id="toolbarBody"></div>
+                <div id="editorBody"></div>
+            </div>
+        </p>
+
+        <p class="form-item">
+            <label asp-for="@Model.Course.UrlTitle"></label>
+            <input asp-for="@Model.Course.UrlTitle" />
+            <span asp-validation-for="@Model.Course.UrlTitle" class="text-danger"></span>
+        </p>
+        <p class="form-item">
+            <label asp-for="@Model.Course.SocialSharingImage"></label>
+            <input asp-for="@Model.Course.SocialSharingImage" id="SocialThumbnailImage" />
+        </p>
+        <p class="form-item">
+            <img id="SocialThumbnailImagePlaceHolder" />
+        </p>
+        <p>
+            <label for="">Ikona</label>
+        </p>
+        <div class="svg-picker">
+
+            @{
+                var i = 1;
+                var isChecked = true;
+                foreach (var svg in Model.Svgs)
+                {
+                    <div class="svg-picker__item">
+                        @Html.RadioButtonFor(m => m.Course.SvgId, svg.Id, new { id = svg.Id })
+                        <label for="@svg.Id"></label>
+                        <svg viewBox="0 0 128 128">
+                            <linearGradient id="gradient" x1="0%" y1="0%" x2="66%" y2="100%">
+                                <stop offset="0%" stop-color="var(--grad-1)"></stop>
+                                <stop offset="100%" stop-color="var(--grad-2)"></stop>
+                            </linearGradient>
+                            @Html.Raw(svg.Path);
+                        </svg>
+                    </div>
+                    isChecked = false;
+                    i++;
+                }
+            }
+
+        </div>
+
+        <p>
+            <label for="">Barva</label>
+        </p>
+        <div class="form-item gradient-picker">
+            <div class="gradient-picker__color" data-gradient="gradient-1">
+                <input asp-for="@Model.Course.Modificator" type="radio" id="gradient-1" value="gradient-1" checked />
+                <label for="gradient-1"></label>
+            </div>
+            <div class="gradient-picker__color" data-gradient="gradient-2">
+                <input asp-for="@Model.Course.Modificator" type="radio" id="gradient-2" value="gradient-2" />
+                <label for="gradient-2"></label>
+            </div>
+            <div class="gradient-picker__color" data-gradient="gradient-3">
+                <input asp-for="@Model.Course.Modificator" type="radio" id="gradient-3" value="gradient-3" />
+                <label for="gradient-3"></label>
+            </div>
+            <div class="gradient-picker__color" data-gradient="gradient-4">
+                <input asp-for="@Model.Course.Modificator" type="radio" id="gradient-4" value="gradient-4" />
+                <label for="gradient-4"></label>
+            </div>
+            <div class="gradient-picker__color" data-gradient="gradient-5">
+                <input asp-for="@Model.Course.Modificator" type="radio" id="gradient-5" value="gradient-5" />
+                <label for="gradient-5"></label>
+            </div>
+            <div class="gradient-picker__color" data-gradient="gradient-6">
+                <input asp-for="@Model.Course.Modificator" type="radio" id="gradient-6" value="gradient-6" />
+                <label for="gradient-6"></label>
+            </div>
+            <div class="gradient-picker__color" data-gradient="gradient-7">
+                <input asp-for="@Model.Course.Modificator" type="radio" id="gradient-7" value="gradient-7" />
+                <label for="gradient-7"></label>
+            </div>
+            <div class="gradient-picker__color" data-gradient="gradient-8">
+                <input asp-for="@Model.Course.Modificator" type="radio" id="gradient-8" value="gradient-8" />
+                <label for="gradient-8"></label>
+            </div>
+            <div class="gradient-picker__color" data-gradient="gradient-9">
+                <input asp-for="@Model.Course.Modificator" type="radio" id="gradient-9" value="gradient-9" />
+                <label for="gradient-9"></label>
+            </div>
+            <div class="gradient-picker__color" data-gradient="gradient-10">
+                <input asp-for="@Model.Course.Modificator" type="radio" id="gradient-10" value="gradient-10" />
+                <label for="gradient-10"></label>
+            </div>
+            <div class="gradient-picker__color" data-gradient="gradient-11">
+                <input asp-for="@Model.Course.Modificator" type="radio" id="gradient-11" value="gradient-11" />
+                <label for="gradient-11"></label>
+            </div>
+        </div>
+        <br />
+        <div style="display: inline-block; width: 100%;">
+            <div class="subject-info-box-1">
+                <select multiple="multiple" id='lstBox1' class="form-control">
+                    @if (Model.Course?.Tags != null)
+                    {
+                        foreach (var tag in Model.Course.Tags)
+                        {
+                            <option value="@tag.Name">@tag.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="subject-info-arrows text-center">
+                <input type='button' id='btnRight' value=&gt; class="btn btn-default" />
+                <br />
+                <input type='button' id='btnLeft' value=&lt; class="btn btn-default" />
+                <br />
+            </div>
+
+
+
+            <div class="subject-info-box-2">
+                <select multiple="multiple" id='lstBox2' class="form-control">
+                    @foreach (var tag in Model.Tags)
+                    {
+                        bool exist = false;
+                        if (Model.Course?.Tags != null)
+                        {
+                            exist = (Model.Course.Tags).Any(t => t.Id == tag.Id);
+                        }
+                        if (!exist)
+                        {
+                            <option value="@tag.Name">@tag.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div id="tags-output">
+                <label>tagy</label>
+
+                @Html.TextBoxFor(m => m.Tagy, "...", new { id = "tags", name = "Tagy", @readonly = "readonly" })
+
+            </div>
+        </div>
+        <br>
+        <button type="submit" id="save">Vytvořit</button>
+    </form>
+</main>
+
+
+
+
+@section scripts {
+    <script type="text/javascript">
+
+        var grad = "";
+
+        $(document).on('click',
+            '.gradient-picker__color',
+            function () {
+                grad = $(this).attr("data-gradient");
+                console.log(grad);
+                $("body").attr("data-gradient", grad);
+                var radioValue = $("input[name='svg']:checked").attr('id');
+
+                console.log("checked " + radioValue);
+            });
+
+        $(document).ready(function () {
+            ColorizeIcons();
+        });
+
+        function ColorizeIcons() {
+            var grad = $("input[name='Course.Modificator']:checked").parent().attr('data-gradient');
+            console.log(grad);
+            $("body").attr("data-gradient", grad);
+        }
+
+        let quill = new Quill('#editorBody',
+            {
+                modules: {
+                    toolbar: {
+                        container: toolbarOptions,
+                        handlers: {
+                            image: imageHandler
+                        },
+                        syntax: true
+                    }
+                },
+                theme: 'snow'
+            });
+        let quillWillLearn = new Quill('#editorWillLearn',
+            {
+                modules: {
+                    toolbar: {
+                        container: toolbarOptions,
+                        handlers: {
+                            image: imageHandler
+                        },
+                        syntax: true
+                    }
+                },
+                theme: 'snow'
+            });
+
+
+
+            quill.setContents(@Html.Raw(Model.Course.Body))
+            quillWillLearn.setContents(@Html.Raw(Model.Course.WillLearn))
+
+
+        var form = document.querySelector('#mySubmitForm');
+        form.onsubmit = function () {
+            console.log("submitted")
+            // Populate hidden form on submit
+            var willLearn = document.querySelector('input[id=Course_WillLearn]');
+            willLearn.value = JSON.stringify(quillWillLearn.getContents());
+            var body = document.querySelector('input[id=Course_Body]');
+            body.value = JSON.stringify(quill.getContents());
+
+            console.log("Submitted", $(form).serialize(), $(form).serializeArray());
+
+        };
+    </script>
+}
+
+

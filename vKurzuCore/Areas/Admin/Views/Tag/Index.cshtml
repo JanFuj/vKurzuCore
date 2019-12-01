@@ -1,0 +1,30 @@
+﻿@model IEnumerable<vKurzuCore.ViewModels.Admin.TagViewModel>
+
+@{
+    ViewBag.Title = "Admin Tag";
+}
+
+<partial name="_adminLoginPartial" />
+<main class="main">
+    <div class="admin-list-header">
+        <h1>Tagy</h1>
+        <a class="button" asp-action="New" asp-controller="Tag">Vytvořit</a>
+    </div>
+
+    <ul class="admin-list">
+
+        @foreach (var item in Model)
+        {
+            <li class="admin-list__item">
+                <div class="admin-list__cell admin-list__cell--info">
+                    <div class="">@Html.DisplayFor(modelItem => item.Name)</div>
+                </div>
+                <div class="admin-list__cell admin-list__cell--buttons">
+                    <a class="link--gradient" asp-controller="Tag" asp-action="Edit" asp-route-id="@item.Id">Upravit</a>
+                    <a class="link--gradient" asp-controller="Tag" asp-action="Delete" asp-route-id="@item.Id">Smazat</a>
+                </div>
+            </li>
+        }
+
+    </ul>
+</main>

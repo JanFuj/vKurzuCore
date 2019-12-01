@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using vKurzuCore.Data;
 using vKurzuCore.Helpers;
-using vKurzuCore.ViewModels;
+using vKurzuCore.ViewModels.Admin;
 
 namespace vKurzuCore.Areas.Admin.Controllers
 {
@@ -55,87 +55,60 @@ namespace vKurzuCore.Areas.Admin.Controllers
 
             return View(viewModel);
         }
-
-        // GET: Person/Details/5
-        [Route("detail/{id}")]
-        public ActionResult Details(int id)
+   
+        [Route("tolector/{id}")]
+        public async Task<IActionResult> ToLector(string id)
         {
-            return View();
+            var user = _context.Users.FirstOrDefault(x => x.Id == id);
+            if (user == null) return NotFound();
+            await _userManager.RemoveFromRoleAsync(user, Constants.Roles.User);
+            await _userManager.AddToRoleAsync(user, Constants.Roles.Lector);
+            return RedirectToAction(nameof(Index));
+        }
+       
+        [Route("touser/{id}")]
+        public async Task<IActionResult> ToUser(string id)
+        {
+            var user = _context.Users.FirstOrDefault(x => x.Id == id);
+            if (user == null) return NotFound();
+            await _userManager.RemoveFromRoleAsync(user, Constants.Roles.Lector);
+            await _userManager.AddToRoleAsync(user, Constants.Roles.User);
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: Person/Create
-        [Route("new")]
-
-        public ActionResult New()
-        {
-            return View();
-        }
-
-        // POST: Person/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("new")]
-        public ActionResult New(IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Person/Edit/5
-        [Route("edit/{id}")]
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: Person/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("edit/{id}")]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
 
         // GET: Person/Delete/5
         [Route("delete/{id}")]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
-            return View();
+            var user = _context.Users.FirstOrDefault(x => x.Id == id);
+            if (user == null) return NotFound();
+            var viewModel = new PersonViewModel()
+            {
+                Id = user.Id,
+                Name = user.Email
+            };
+            return View(viewModel);
         }
 
         // POST: Person/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("delete/{id}")]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> Delete(PersonViewModel viewModel)
         {
+            if (!ModelState.IsValid) return View(viewModel);
+
             try
             {
-                // TODO: Add delete logic here
-
+                var user = _context.Users.FirstOrDefault(x => x.Id == viewModel.Id);
+                if (user == null) return NotFound();
+                await _userManager.DeleteAsync(user);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View(viewModel);
             }
         }
     }

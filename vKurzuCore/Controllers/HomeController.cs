@@ -1,9 +1,12 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using vKurzuCore.Models;
 using vKurzuCore.Repositories;
+using vKurzuCore.Services;
 using vKurzuCore.ViewModels;
 
 namespace vKurzuCore.Controllers
@@ -12,13 +15,16 @@ namespace vKurzuCore.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMyEmailSender _emailSender;
         private readonly HomeViewModel _viewModel;
 
         public HomeController(
             ILogger<HomeController> logger,
+            IMyEmailSender emailSender,
             IUnitOfWork unitOfWork)
         {
             _logger = logger;
+            _emailSender = emailSender;
             _unitOfWork = unitOfWork;
             _viewModel = new HomeViewModel();
         }
@@ -32,6 +38,22 @@ namespace vKurzuCore.Controllers
             return View(_viewModel);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SendEmail(HomeViewModel viewModel)
+        {
+            var sent = await _emailSender.SendEmailFromForm(viewModel.FormModel.Email, "Dotaz", $"{viewModel.FormModel.Message} \n {viewModel.FormModel.Email}");
+            if (!sent)
+            {
+                Console.WriteLine("sending email error");
+            }
+            else
+            {
+                TempData["EmailSent"] = "sent";
+            }
+       
+            return RedirectToAction(nameof(Index));
+        }
         public IActionResult Privacy()
         {
             return View();

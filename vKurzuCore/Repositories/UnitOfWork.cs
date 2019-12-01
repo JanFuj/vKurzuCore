@@ -15,6 +15,7 @@ namespace vKurzuCore.Repositories
         public IBlogRepository Blogs { get; private set; }
         public ISvgRepository Svgs { get; private set; }
         public IImageRepository Images { get; private set; }
+        public ITagRepository Tags { get; private set; }
 
         private readonly vKurzuDbContext _context;
         public UnitOfWork(vKurzuDbContext context)
@@ -26,6 +27,7 @@ namespace vKurzuCore.Repositories
             Blogs = new BlogRepository(_context);
             Svgs = new SvgRepository(_context);
             Images = new ImageRepository(_context);
+            Tags = new TagRepository(_context);
         }
         public int Save()
         {

@@ -15,6 +15,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Http;
 using vKurzuCore.Repositories;
 using vKurzuCore.Models;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using vKurzuCore.Services;
 
 namespace vKurzuCore
 {
@@ -37,8 +39,8 @@ namespace vKurzuCore
                  .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<vKurzuDbContext>();
             services.AddControllersWithViews();
-            services.AddRazorPages();
-            services.AddMvc();
+            services.AddRazorPages().AddRazorRuntimeCompilation(); 
+            services.AddMvc().AddRazorRuntimeCompilation(); 
             services.Configure<IdentityOptions>(options =>
             {
                 // Password settings.
@@ -79,6 +81,8 @@ namespace vKurzuCore
 
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<IMyEmailSender, EmailSender>();
 
         }
 

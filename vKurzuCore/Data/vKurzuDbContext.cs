@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using vKurzuCore.Models;
+using vKurzuCore.ViewModels.Admin;
+using vKurzuCore.ViewModels.Dto;
 
 namespace vKurzuCore.Data
 {
@@ -62,6 +64,15 @@ namespace vKurzuCore.Data
                 .HasIndex(b => b.Name)
                 .IsUnique();
 
-        }
+            builder.Entity<Tag>()
+                .HasIndex(b => b.Name)
+                .IsUnique();
+
+            builder.Entity<Course>()
+              .HasIndex(b => b.UrlTitle)
+              .IsUnique();
+
+        }       
+
     }
 }

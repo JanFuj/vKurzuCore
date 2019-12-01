@@ -17,13 +17,12 @@ namespace vKurzuCore.Models
 
             using (var context = new vKurzuDbContext(serviceProvider.GetRequiredService<DbContextOptions<vKurzuDbContext>>()))
             {
+                var roleManager = serviceProvider.GetService<RoleManager<IdentityRole>>();
                 foreach (string role in roles)
                 {
-                    var roleStore = new RoleStore<IdentityRole>(context);
-
                     if (!context.Roles.Any(r => r.Name == role))
                     {
-                        await roleStore.CreateAsync(new IdentityRole(role));
+                        await roleManager.CreateAsync(new IdentityRole(role));
                     }
                 }
                 var adminID = await EnsureUser(serviceProvider, adminUserName, adminPw);

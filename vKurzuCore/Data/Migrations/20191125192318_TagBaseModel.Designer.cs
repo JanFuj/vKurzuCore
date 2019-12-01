@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using vKurzuCore.Data;
 
 namespace vKurzuCore.Data.Migrations
 {
     [DbContext(typeof(vKurzuDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191125192318_TagBaseModel")]
+    partial class TagBaseModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -376,7 +378,7 @@ namespace vKurzuCore.Data.Migrations
 
                     b.Property<string>("UrlTitle")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("WillLearn")
                         .IsRequired()
@@ -385,9 +387,6 @@ namespace vKurzuCore.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("SvgId");
-
-                    b.HasIndex("UrlTitle")
-                        .IsUnique();
 
                     b.ToTable("Courses");
                 });
@@ -507,7 +506,7 @@ namespace vKurzuCore.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OwnerId")
                         .HasColumnType("nvarchar(max)");
@@ -516,10 +515,6 @@ namespace vKurzuCore.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique()
-                        .HasFilter("[Name] IS NOT NULL");
 
                     b.ToTable("Tags");
                 });

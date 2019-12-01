@@ -1,0 +1,25 @@
+﻿@model vKurzuCore.ViewModels.Admin.TagViewModel
+
+@{
+    ViewBag.Title = "New Tag";
+}
+
+<partial name="_adminLoginPartial" />
+<main class="main">
+    <h3>Vytvořit nový tag</h3>
+    <form class="admin-form" asp-controller="Tag" asp-action="New" method="post">
+        <div class="form-horizontal">
+            <hr />
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input hidden asp-for="Id" />
+            <p class="form-item">
+                <label asp-for="Name"></label>
+                <input asp-for="Name" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </p>
+            <p>
+                <button type="submit" id="save">Vytvořit</button>
+            </p>
+        </div>
+    </form>
+</main>

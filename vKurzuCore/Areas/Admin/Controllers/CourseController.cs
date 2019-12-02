@@ -52,6 +52,7 @@ namespace vKurzuCore.Areas.Admin.Controllers
                 Id = course.Id,
                 Name = course.Name,
                 Approved = course.Approved,
+                UrlTitle = course.UrlTitle,
 
             });
             return View(dtos);

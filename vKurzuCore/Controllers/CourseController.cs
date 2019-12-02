@@ -20,9 +20,10 @@ namespace vKurzuCore.Controllers
         }
 
         [Route("kurz/{urlTitle}")]
-        public async Task<IActionResult> Detail(string urlTitle)
+        public async Task<IActionResult> Detail(string urlTitle, bool preview)
         {
-            var course = await _unitOfWork.Courses.FindByUrlAsync(urlTitle);
+            var course = preview ? await _unitOfWork.Courses.FindPreviewCourseByUrlAsync(urlTitle) : await _unitOfWork.Courses.FindByUrlAsync(urlTitle);
+         
             if (course == null) return NotFound();
             var viewModel = new CourseViewModel()
             {

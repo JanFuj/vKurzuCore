@@ -27,5 +27,9 @@ namespace vKurzuCore.Repositories
         {
             return vKurzuDbContext.Courses.Include(c => c.Svg).FirstOrDefaultAsync(c => !c.Deleted && c.Approved && c.UrlTitle == urlTitle);
         }
+        public Task<Course> FindPreviewCourseByUrlAsync(string urlTitle)
+        {
+            return vKurzuDbContext.Courses.Include(c => c.Svg).FirstOrDefaultAsync(c => !c.Deleted  && c.UrlTitle == urlTitle);
+        }
     }
 }

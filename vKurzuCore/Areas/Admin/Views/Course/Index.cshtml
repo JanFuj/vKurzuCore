@@ -23,7 +23,7 @@
                 </div>
                 <div class="admin-list__cell admin-list__cell--buttons">
                     <a class="link--gradient" asp-action="Edit" asp-route-id="@item.Id">Upravit</a>
-                    <a class="link--gradient" asp-action="Details" asp-route-urltitle="@item.UrlTitle">Náhled</a>
+                    <a class="link--gradient" asp-area="" asp-action="Detail" asp-controller="Course" asp-route-urlTitle="@item.UrlTitle" asp-route-preview="true">Náhled</a>
                     <a class="link--gradient" asp-action="Delete" asp-route-id="@item.Id">Smazat</a>
                     @if (User.IsInRole(Constants.Roles.Admin))
                     {

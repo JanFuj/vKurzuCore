@@ -9,5 +9,6 @@ namespace vKurzuCore.Repositories
         IEnumerable<Course> GetPublishedCourses();
 
         Task<Course> FindByUrlAsync(string urlTitle);
+        Task<Course> FindPreviewCourseByUrlAsync(string urlTitle);
     }
 }

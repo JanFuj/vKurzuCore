@@ -72,6 +72,10 @@ namespace vKurzuCore.Data
               .HasIndex(b => b.UrlTitle)
               .IsUnique();
 
+            builder.Entity<Blog>()
+              .HasIndex(b => b.UrlTitle)
+              .IsUnique();
+
         }       
 
     }

@@ -10,6 +10,5 @@ namespace vKurzuCore.ViewModels.Course
     {
         public CourseDto Course { get; set; }
         public CourseContactForm FormModel { get; set; } = new CourseContactForm();
-
     }
 }

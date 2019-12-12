@@ -28,6 +28,6 @@ namespace vKurzuCore.Models
         public string UrlTitle { get; set; }
         public string HeaderImage { get; set; }
         public string SocialSharingImage { get; set; }
-        public ICollection<CourseTag> CourseTags { get; set; }
+        public ICollection<CourseTag> CourseTags { get; set; } = new List<CourseTag>();
     }
 }

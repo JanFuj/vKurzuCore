@@ -1,0 +1,124 @@
+﻿@model vKurzuCore.ViewModels.Blog.BlogViewModel
+@{
+    ViewBag.Title = "Nový kurz";
+}
+
+<partial name="_adminLoginPartial" />
+<main class="main main--admin-form">
+    <h1>Vytvořit nový blog</h1>
+    <form class="admin-form" asp-controller="Blog" asp-action="New" method="post" id="mySubmitForm">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <p class="form-item">
+            <label asp-for="@Model.Blog.Name"></label>
+            <input asp-for="@Model.Blog.Name" />
+            <span asp-validation-for="@Model.Blog.Name" class="text-danger"></span>
+        </p>
+        <p class="form-item">
+            <label asp-for="@Model.Blog.Description"></label>
+            <input asp-for="@Model.Blog.Description" />
+            <span asp-validation-for="@Model.Blog.Description" class="text-danger"></span>
+        </p>
+        <p class="form-item">
+            <label asp-for="@Model.Blog.Body"></label>
+            <input asp-for="@Model.Blog.Body" hidden />
+            <span asp-validation-for="@Model.Blog.Body" class="text-danger"></span>
+            <div class="quill-wrapper">
+                <div id="toolbar"></div>
+                <div id="editor"></div>
+            </div>
+        </p>
+        <p class="form-item">
+            <label asp-for="@Model.Blog.UrlTitle"></label>
+            <input asp-for="@Model.Blog.UrlTitle" />
+            <span asp-validation-for="@Model.Blog.UrlTitle" class="text-danger"></span>
+        </p>
+
+        <p class="form-item">
+            <label asp-for="@Model.Blog.RelatedCourseId"></label>
+            <select asp-for="@Model.Blog.RelatedCourseId"
+                    asp-items="@(new SelectList(Model.Courses,"Id","Name"))">
+                <option>Vyberte kurz</option>
+            </select>
+        </p>
+        <p class="form-item">
+            <label asp-for="@Model.Blog.HeaderImage"></label>
+            <input asp-for="@Model.Blog.HeaderImage" id="HeaderImage" />
+        </p>
+        <p class="form-item">
+            <img id="HeaderImagePlaceHolder" />
+        </p>
+        <p class="form-item">
+            <label asp-for="@Model.Blog.SocialSharingImage"></label>
+            <input asp-for="@Model.Blog.SocialSharingImage" id="SocialThumbnailImage" />
+        </p>
+        <p class="form-item">
+            <img id="SocialThumbnailImagePlaceHolder" />
+        </p>
+        <br />
+        <div style="display: inline-block; width: 100%;">
+            <div class="subject-info-box-1">
+                <select multiple="multiple" id='lstBox1' class="form-control">
+                    @foreach (var blogTag in Model.Blog.BlogTags)
+                    {
+                        <option value="@blogTag.TagId">@blogTag.Tag?.Name</option>
+                    }
+                </select>
+            </div>
+
+            <div class="subject-info-arrows text-center">
+                <input type='button' id='btnRight' value=&gt; class="btn btn-default" />
+                <br />
+                <input type='button' id='btnLeft' value=&lt; class="btn btn-default" />
+                <br />
+            </div>
+
+            <div class="subject-info-box-2">
+                <select multiple="multiple" id='lstBox2' class="form-control">
+                    @foreach (var tag in Model.Tags.Where(x => !Model.Blog.BlogTags.Select(x => x.TagId).Contains(x.Id)))
+                    {
+                        <option value="@tag.Id">@tag.Name</option>
+                    }
+                </select>
+            </div>
+            <div id="tags-output">
+                <label>tagy</label>
+
+                @Html.TextBoxFor(m => m.Tagy, "...", new { id = "tags", name = "Tagy", @readonly = "readonly" })
+
+            </div>
+        </div>
+        <br>
+        <button type="submit" id="save">Vytvořit</button>
+    </form>
+</main>
+
+@section scripts {
+
+    <script type="text/javascript">
+
+        let quill = new Quill('#editor',
+            {
+                modules: {
+                    toolbar: {
+                        container: toolbarOptions,
+                        handlers: {
+                            image: imageHandler
+                        },
+                        syntax: true
+                    }
+                },
+                theme: 'snow'
+            });
+        quill.setContents(@Html.Raw(Model.Blog.Body))
+
+        var form = document.querySelector('#mySubmitForm');
+        form.onsubmit = function () {
+            console.log("submitted")
+            // Populate hidden form on submit
+            var description = document.querySelector('input[id=Blog_Body]');
+            description.value = JSON.stringify(quill.getContents());
+            console.log("Submitted", $(form).serialize(), $(form).serializeArray());
+        };
+    </script>
+}

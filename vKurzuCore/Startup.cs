@@ -17,6 +17,9 @@ using vKurzuCore.Repositories;
 using vKurzuCore.Models;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using vKurzuCore.Services;
+using AutoMapper;
+using vKurzuCore.Helpers;
+using vKurzuCore.Helpers.Contracts;
 
 namespace vKurzuCore
 {
@@ -83,7 +86,8 @@ namespace vKurzuCore
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IMyEmailSender, EmailSender>();
-
+            services.AddScoped<ITagParser, TagParser>();
+            services.AddAutoMapper(typeof(Startup));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

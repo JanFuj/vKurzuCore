@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using vKurzuCore.Data;
 using vKurzuCore.Helpers;
+using vKurzuCore.Helpers.Contracts;
 using vKurzuCore.Models;
 using vKurzuCore.Repositories;
 using vKurzuCore.ViewModels.Admin;
@@ -23,16 +23,23 @@ namespace vKurzuCore.Areas.Admin.Controllers
     public class CourseController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly string _loggedUserId;
+        private readonly ITagParser _tagParser;
 
-        public CourseController(IUnitOfWork unitOfWork,
+        public CourseController(
+            IUnitOfWork unitOfWork,
             UserManager<IdentityUser> userManager,
-            IHttpContextAccessor contextAccessor)
+            IMapper mapper,
+            IHttpContextAccessor contextAccessor,
+            ITagParser tagParser)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
+            _mapper = mapper;
             _loggedUserId = _userManager.GetUserId(contextAccessor.HttpContext.User);
+            _tagParser = tagParser;
         }
 
         // GET: Admin/Course
@@ -42,42 +49,12 @@ namespace vKurzuCore.Areas.Admin.Controllers
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var courses = await _unitOfWork.Courses.GetAllAsync();
             if (User.IsInRole(Constants.Roles.Lector))
-            {
                 courses = courses.Where(x => x.OwnerId == user.Id);
-            }
 
-            var dtos = courses.Select(course =>
-            new CourseDto()
-            {
-                Id = course.Id,
-                Name = course.Name,
-                Approved = course.Approved,
-                UrlTitle = course.UrlTitle,
+            var dtos = _mapper.Map<List<CourseDto>>(courses);
 
-            });
             return View(dtos);
         }
-
-        //// GET: Admin/Course/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var courseDto = await _context.CourseDto
-        //        .Include(c => c.Svg)
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (courseDto == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(courseDto);
-        //}
-
-        // GET: Admin/Course/Create
 
         [Route("new")]
         public async Task<IActionResult> New()
@@ -89,7 +66,7 @@ namespace vKurzuCore.Areas.Admin.Controllers
                 Course = new CourseDto()
                 {
                     Svg = svgs.First(),
-                    SvgId = svgs.First().Id
+                    SvgId = svgs.First().Id,
                 },
                 Svgs = svgs.ToList(),
                 Tags = tags.ToList()
@@ -97,9 +74,6 @@ namespace vKurzuCore.Areas.Admin.Controllers
             return View(viewModel);
         }
 
-        // POST: Admin/Course/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("new")]
@@ -120,8 +94,14 @@ namespace vKurzuCore.Areas.Admin.Controllers
                         Svg = await _unitOfWork.Svgs.FindByIdAsync(viewModel.Course.SvgId),
                         Modificator = viewModel.Course.Modificator,
                         OwnerId = _loggedUserId,
-                        Approved = false,
                     };
+                    var tagIds = await _tagParser.ParseTags(viewModel.Tagy);
+
+                    tagIds.ForEach(id =>
+                        newCourse.CourseTags.Add(new CourseTag()
+                        {
+                            TagId = id
+                        }));
 
                     _unitOfWork.Courses.Add(newCourse);
                     await _unitOfWork.SaveAsync();
@@ -134,7 +114,7 @@ namespace vKurzuCore.Areas.Admin.Controllers
             }
             catch (Exception e)
             {
-                ModelState.AddModelError("", e.InnerException.Message);
+                ModelState.AddModelError("", e.Message);
             }
             var svgs = await _unitOfWork.Svgs.GetAllAsync();
             var tags = await _unitOfWork.Tags.GetAllAsync();
@@ -151,19 +131,8 @@ namespace vKurzuCore.Areas.Admin.Controllers
 
             if (course == null || (User.IsInRole(Constants.Roles.Lector) && course.OwnerId != _loggedUserId)) return NotFound();
 
-            var courseDto = new CourseDto()
-            {
-                Id = course.Id,
-                Name = course.Name,
-                Description = course.Description,
-                WillLearn = course.WillLearn,
-                Body = course.Body,
-                UrlTitle = course.UrlTitle,
-                SocialSharingImage = course.SocialSharingImage,
-                SvgId = course.SvgId,
-                Modificator = course.Modificator,
-                Approved = false,
-            };
+            var courseDto = _mapper.Map<CourseDto>(course);
+         
             var svgs = await _unitOfWork.Svgs.GetAllAsync();
             var tags = await _unitOfWork.Tags.GetAllAsync();
 
@@ -190,6 +159,7 @@ namespace vKurzuCore.Areas.Admin.Controllers
                 {
                     var courseToUpdate = await _unitOfWork.Courses.FindByIdAsync(viewModel.Course.Id);
                     if (courseToUpdate == null || (User.IsInRole(Constants.Roles.Lector) && courseToUpdate.OwnerId != _loggedUserId)) return NotFound();
+
                     courseToUpdate.Id = viewModel.Course.Id;
                     courseToUpdate.Name = viewModel.Course.Name;
                     courseToUpdate.Description = viewModel.Course.Description;
@@ -199,7 +169,15 @@ namespace vKurzuCore.Areas.Admin.Controllers
                     courseToUpdate.SocialSharingImage = viewModel.Course.SocialSharingImage;
                     courseToUpdate.SvgId = viewModel.Course.SvgId;
                     courseToUpdate.Modificator = viewModel.Course.Modificator;
+                    courseToUpdate.CourseTags = new List<CourseTag>();
+                    var tagIds = await _tagParser.ParseTags(viewModel.Tagy);
 
+                    tagIds.ForEach(id =>
+                        courseToUpdate.CourseTags.Add(new CourseTag()
+                        {
+                            TagId = id,
+                            CourseId = courseToUpdate.Id
+                        }));
                     await _unitOfWork.SaveAsync();
                     return RedirectToAction(nameof(Index));
 
@@ -210,7 +188,7 @@ namespace vKurzuCore.Areas.Admin.Controllers
                 }
                 catch (Exception e)
                 {
-                    ModelState.AddModelError("", e.InnerException.Message);
+                    ModelState.AddModelError("", e.Message);
                 }
             }
 

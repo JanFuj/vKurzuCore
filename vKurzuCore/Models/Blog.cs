@@ -19,7 +19,7 @@ namespace vKurzuCore.Models
 
         [Required]
         public string UrlTitle { get; set; }
-        public int CourseId { get; set; }
+        public int RelatedCourseId { get; set; }
         public Course RelatedCourse { get; set; }
         public string HeaderImage { get; set; }
         public string SocialSharingImage { get; set; }

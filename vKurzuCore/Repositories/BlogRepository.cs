@@ -23,5 +23,11 @@ namespace vKurzuCore.Repositories
         {
             return vKurzuDbContext.Blogs.Include(b => b.BlogTags).Where(b => b.Approved && !b.Deleted).OrderBy(c => c.Position).Take(3).ToList();
         }
+
+        public override Task<Blog> FindByIdAsync(int id)
+        {
+            return vKurzuDbContext.Blogs.Include("BlogTags.Tag")
+                 .SingleOrDefaultAsync(x => x.Id == id && !x.Deleted);
+        }
     }
 }

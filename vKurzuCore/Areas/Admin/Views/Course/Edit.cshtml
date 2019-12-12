@@ -8,6 +8,7 @@
     <h1>Editovat kurz</h1>
     <form class="admin-form" asp-controller="Course" asp-action="Edit" asp-route-id="@Model.Course.Id" method="post" id="mySubmitForm">
         <input hidden asp-for="@Model.Course.Id" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
         <p class="form-item">
             <label asp-for="@Model.Course.Name"></label>
@@ -51,11 +52,7 @@
             <input asp-for="@Model.Course.SocialSharingImage" id="SocialThumbnailImage" />
         </p>
         <p class="form-item">
-            @{
-                var path = Model.Course.SocialSharingImage;
-
-                <img id="SocialThumbnailImagePlaceHolder" src="@path" />
-            }
+            <img id="SocialThumbnailImagePlaceHolder" src="@Model.Course.SocialSharingImage" />
         </p>
         <p>
             <label for="">Ikona</label>
@@ -138,13 +135,12 @@
         <div style="display: inline-block; width: 100%;">
             <div class="subject-info-box-1">
                 <select multiple="multiple" id='lstBox1' class="form-control">
-                    @if (Model.Course?.Tags != null)
+
+                    @foreach (var courseTag in Model.Course.CourseTags)
                     {
-                        foreach (var tag in Model.Course.Tags)
-                        {
-                            <option value="@tag.Name">@tag.Name</option>
-                        }
+                        <option value="@courseTag.TagId">@courseTag.Tag?.Name</option>
                     }
+
                 </select>
             </div>
 
@@ -162,13 +158,13 @@
                     @foreach (var tag in Model.Tags)
                     {
                         bool exist = false;
-                        if (Model.Course?.Tags != null)
+                        if (Model.Course?.CourseTags != null)
                         {
-                            exist = (Model.Course.Tags).Any(t => t.Id == tag.Id);
+                            exist = (Model.Course.CourseTags).Any(t => t.TagId == tag.Id);
                         }
                         if (!exist)
                         {
-                            <option value="@tag.Name">@tag.Name</option>
+                            <option value="@tag.Id">@tag.Name</option>
                         }
                     }
                 </select>

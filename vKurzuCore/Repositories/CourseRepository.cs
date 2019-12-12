@@ -31,5 +31,10 @@ namespace vKurzuCore.Repositories
         {
             return vKurzuDbContext.Courses.Include(c => c.Svg).FirstOrDefaultAsync(c => !c.Deleted  && c.UrlTitle == urlTitle);
         }
+        public override Task<Course> FindByIdAsync(int id)
+        {
+            return vKurzuDbContext.Courses.Include("CourseTags.Tag")
+                 .SingleOrDefaultAsync(x => x.Id == id && !x.Deleted);
+        }
     }
 }

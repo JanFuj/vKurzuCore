@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 using vKurzuCore.Models;
 
 namespace vKurzuCore.ViewModels.Dto
@@ -41,12 +38,12 @@ namespace vKurzuCore.ViewModels.Dto
         [Required(ErrorMessage = "Zadejte url titulek")]
         public string UrlTitle { get; set; }
 
-        [Display(Name = "Url obrazku v hlavnim lazoutu")]
+        [Display(Name = "Url obrazku v hlavnim layoutu")]
         public string HeaderImage { get; set; }
 
         [Display(Name = "Url obrazku pro sdílení na socíalech")]
         public string SocialSharingImage { get; set; }
         public bool Approved { get; set; }
-        public List<Tag> Tags { get; set; }
+        public List<CourseTag> CourseTags { get; set; } = new List<CourseTag>();
     }
 }

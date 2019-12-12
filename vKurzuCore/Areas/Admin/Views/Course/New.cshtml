@@ -132,14 +132,12 @@
         <br />
         <div style="display: inline-block; width: 100%;">
             <div class="subject-info-box-1">
-                <select multiple="multiple" id='lstBox1' class="form-control">
-                    @if (Model.Course?.Tags != null)
+                <select asp-for="@Model.SelectedTags" multiple="multiple" id='lstBox1' class="form-control">
+                    @foreach (var courseTag in Model.Course.CourseTags)
                     {
-                        foreach (var tag in Model.Course.Tags)
-                        {
-                            <option value="@tag.Name">@tag.Name</option>
-                        }
+                        <option value="@courseTag.Tag?.Id">@courseTag.Tag?.Name</option>
                     }
+
                 </select>
             </div>
 
@@ -150,21 +148,11 @@
                 <br />
             </div>
 
-
-
             <div class="subject-info-box-2">
                 <select multiple="multiple" id='lstBox2' class="form-control">
-                    @foreach (var tag in Model.Tags)
+                    @foreach (var tag in Model.Tags.Where(x => !Model.Course.CourseTags.Select(x => x.TagId).Contains(x.Id)))
                     {
-                        bool exist = false;
-                        if (Model.Course?.Tags != null)
-                        {
-                            exist = (Model.Course.Tags).Any(t => t.Id == tag.Id);
-                        }
-                        if (!exist)
-                        {
-                            <option value="@tag.Name">@tag.Name</option>
-                        }
+                        <option value="@tag.Id">@tag.Name</option>
                     }
                 </select>
             </div>

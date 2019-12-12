@@ -5,15 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - vKurzuCore</title>
     <link rel="stylesheet" href="~/css/main.css" />
-
-
 </head>
 <body class="body body--index">
     <partial name="_CookieConsentPartial" />
     @RenderBody()
 
     <footer class="footer footer--blog">
-
         <hr>
         <nav class="nav" role="navigation">
             <ul class="nav__list">
@@ -39,13 +36,14 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/highlight.js" ></script>
-    <script src="~/js/outdated-browser-rework.js" ></script>
-    <script src="~/js/quill.min.js" ></script>
-    <script src="~/js/script.js" ></script>
-    <script src="~/js/sweetalert2.min.js" ></script>
-    <script src="~/js/TagScripts.js" ></script>
-    <script src="~/js/ThumbnailJs.js" ></script>
+    <script src="~/js/highlight.js"></script>
+    <script src="~/js/outdated-browser-rework.js"></script>
+    <script src="~/js/quill.min.js"></script>
+    <script src="~/js/script.js"></script>
+    <script src="~/js/sweetalert2.min.js"></script>
+    <script src="~/js/TagScripts.js"></script>
+    <script src="~/js/ThumbnailJs.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
     <partial name="_ValidationScriptsPartial" />
     @RenderSection("Scripts", required: false)
 </body>

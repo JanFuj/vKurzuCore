@@ -16,7 +16,7 @@ namespace vKurzuCore.Repositories
             Context = context;
         }
 
-        public Task<TEntity> FindByIdAsync(int id)
+        public virtual Task<TEntity> FindByIdAsync(int id)
         {
             return Context.Set<TEntity>()
                 .SingleOrDefaultAsync(x => x.Id == id && !x.Deleted);
@@ -25,7 +25,7 @@ namespace vKurzuCore.Repositories
         public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
             return await Context.Set<TEntity>()
-                .Where(x => !x.Deleted).ToListAsync();
+                .Where(x => !x.Deleted).OrderByDescending(x=>x.Position).ToListAsync();
         }
 
         public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)

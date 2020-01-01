@@ -20,6 +20,7 @@ using vKurzuCore.Services;
 using AutoMapper;
 using vKurzuCore.Helpers;
 using vKurzuCore.Helpers.Contracts;
+using vKurzuCore.Services.Contracts;
 
 namespace vKurzuCore
 {
@@ -83,6 +84,7 @@ namespace vKurzuCore
 
 
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
+            services.AddScoped(typeof(ITutorialCategoryService), typeof(TutorialCategoryService));
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IMyEmailSender, EmailSender>();

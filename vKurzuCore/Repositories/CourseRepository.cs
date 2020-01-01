@@ -18,6 +18,7 @@ namespace vKurzuCore.Repositories
         {
 
         }
+
         public IEnumerable<Course> GetPublishedCourses()
         {
             return vKurzuDbContext.Courses.Include(c => c.Svg).Where(c => !c.Deleted && c.Approved).OrderBy(c => c.Position).ToList();
@@ -35,6 +36,11 @@ namespace vKurzuCore.Repositories
         {
             return vKurzuDbContext.Courses.Include("CourseTags.Tag")
                  .SingleOrDefaultAsync(x => x.Id == id && !x.Deleted);
+        }
+        public Task<Course> FindApprovedByIdAsync(int id)
+        {
+            return vKurzuDbContext.Courses.Include("CourseTags.Tag").Include(c => c.Svg)
+                 .SingleOrDefaultAsync(x => x.Id == id && !x.Deleted && x.Approved);
         }
     }
 }

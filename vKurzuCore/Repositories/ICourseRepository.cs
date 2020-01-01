@@ -10,5 +10,7 @@ namespace vKurzuCore.Repositories
 
         Task<Course> FindByUrlAsync(string urlTitle);
         Task<Course> FindPreviewCourseByUrlAsync(string urlTitle);
+
+        Task<Course> FindApprovedByIdAsync(int id);
     }
 }

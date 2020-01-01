@@ -21,7 +21,6 @@
 
 
   <ItemGroup>
-    <Folder Include="Views\Blog\" />
     <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 

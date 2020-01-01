@@ -1,0 +1,103 @@
+﻿@model vKurzuCore.ViewModels.Blog.BlogViewModel
+
+<body class="body body-article">
+    <header class="header header--article header--down header--up-top" id="site-header">
+        <partial name="_toolbar" />
+    </header>
+    <main class="main--article">
+        <article class="article">
+            <header class="article__header">
+                <div class="article__image-wrapper">
+                    <img class="article__image" src="@Model.Blog.HeaderImage">
+                </div>
+                <div class="article__details-wrapper">
+                    <h1 class="article__title">@Model.Blog.Name</h1>
+                    <div class="article__tags">
+                        @foreach (var blogTag in Model.Blog.BlogTags)
+                        {
+                            <span class="tag">@blogTag.Tag.Name</span>
+                        }
+                    </div>
+                    <div class="article__details">
+
+                        <time class="article_release-date">@Model.Blog.Changed.ToString("d")</time>
+                    </div>
+                </div>
+            </header>
+            <div class="article__content">
+                <p>
+                    <div id="editor"></div>
+                </p>
+                @{
+                    if (@Model.RelatedCourse != null)
+                    {
+                        <aside class="related-course" data-gradient="@Model.RelatedCourse.Modificator">
+                            <h5 class="h6 related-course__heading">Související kurz</h5>
+                            <div class="course-card course-card--css-advanced course-card--related">
+                                <a class="course-card__link" asp-action="Detail" asp-controller="Course" asp-route-urlTitle="@Model.RelatedCourse.UrlTitle"></a>
+                                <div class="course-card__content">
+                                    <div class="course-card__image">
+                                        <svg viewBox="0 0 128 128">
+                                            <linearGradient id="@Model.RelatedCourse.Modificator" x1="0%" y1="0%" x2="66%" y2="100%"><stop offset="0%" stop-color="var(--grad-1)" /><stop offset="100%" stop-color="var(--grad-2)" /></linearGradient>
+                                            @Html.Raw(Model.RelatedCourse.Svg.Path)
+                                        </svg>
+                                    </div>
+                                    <div class="course-card__info">
+                                        <h6 class="course-card__title"><a class="course-card__title-link" href="course.html">@Model.RelatedCourse.Name</a></h6>
+                                        @{
+                                            var length = 127;
+
+                                            if (Model.RelatedCourse.Description.Length < 127)
+                                            {
+                                                length = Model.RelatedCourse.Description.Length;
+                                            }
+                                            <p class="course-card__desc">@Model.RelatedCourse.Description.Substring(0, length)...</p>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+                    }
+                }
+
+            </div>
+        </article>
+        <aside class="related-articles">
+            <hr>
+            <h2 class="related-articles__heading">Čtěte dále</h2>
+            <div class="related-articles__grid">
+                @{
+                    foreach (var article in Model.RelatedArticles)
+                    {
+                        <article class="article-preview">
+                            <h3 class="h4 article-preview__title"><a class="link--gradient-inversed" asp-controller="Blog" asp-action="Detail" asp-route-urlTitle="@article.UrlTitle">@article.Name</a></h3>
+                            <p class="article-preview__text">@article.Description</p>
+                            <div class="article-preview__bottom-link"><a class="link--gradient link--border" asp-controller="Blog" asp-action="Detail" asp-route-urlTitle="@article.UrlTitle">Číst článek</a></div>
+                        </article>
+                    }
+                }
+            </div>
+        </aside>
+    </main>
+</body>
+
+
+@section scripts {
+
+    <script type="text/javascript">
+
+        let quill = new Quill('#editor',
+            {
+                modules: {
+                    "toolbar": false,
+                    syntax:true
+                },
+                theme: 'snow'
+            });
+
+            quill.setContents(@Html.Raw(Model.Blog.Body))
+
+            quill.enable(false);
+    </script>
+
+}

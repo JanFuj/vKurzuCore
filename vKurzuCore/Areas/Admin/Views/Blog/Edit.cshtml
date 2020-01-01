@@ -8,7 +8,7 @@
     <h1>Upravit blog</h1>
     <form class="admin-form" asp-controller="Blog" asp-action="Edit" asp-route-id="@Model.Blog.Id" method="post" id="mySubmitForm">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
+        <input hidden asp-for="@Model.Blog.Id" />
         <p class="form-item">
             <label asp-for="@Model.Blog.Name"></label>
             <input asp-for="@Model.Blog.Name" />
@@ -89,7 +89,7 @@
             </div>
         </div>
         <br>
-        <button type="submit" id="save">Vytvořit</button>
+        <button type="submit" id="save">Uložit</button>
     </form>
 </main>
 

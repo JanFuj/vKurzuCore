@@ -29,5 +29,24 @@ namespace vKurzuCore.Repositories
             return vKurzuDbContext.Blogs.Include("BlogTags.Tag")
                  .SingleOrDefaultAsync(x => x.Id == id && !x.Deleted);
         }
+
+        public Task<Blog> FindByUrlAsync(string urlTitle)
+        {
+            return vKurzuDbContext.Blogs.Include("BlogTags.Tag").FirstOrDefaultAsync(c => !c.Deleted && c.Approved && c.UrlTitle == urlTitle);
+        }
+
+        public Task<Blog> FindPreviewBlogByUrlAsync(string urlTitle)
+        {
+            return vKurzuDbContext.Blogs.Include("BlogTags.Tag").FirstOrDefaultAsync(c => !c.Deleted && c.UrlTitle == urlTitle);
+        }
+        public IEnumerable<Blog> GetPublishedBlogArticles()
+        {
+            return vKurzuDbContext.Blogs.Include("BlogTags.Tag").Where(c => !c.Deleted && c.Approved).OrderBy(c => c.Position).ToList();
+        }
+
+        public IEnumerable<Blog> GetRelatedArticles(int id)
+        {
+            return GetPublishedBlogArticles().Where(x => x.Id != id).Take(3);
+        }
     }
 }

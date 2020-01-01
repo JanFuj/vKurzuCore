@@ -1,10 +1,10 @@
 ﻿<nav class="nav" role="navigation">
-    <a class="site-branding" href="@Url.Action("Index","Home")">
+    <a class="site-branding" asp-controller="Home" asp-action="Index">
         <partial name="_logoView" />
     </a>
     <ul class="nav__list">
-        <li class="nav__item"><a class="nav__link link--gradient link--border-hover" href="@Url.Action("Index","Home")#courses">Kurzy</a></li>
-        <li class="nav__item"><a class="nav__link link--gradient link--border-hover" href="@Url.Action("Index","Blog",new{title = "index"})">Blog</a></li>
-        <li class="nav__item"><a class="nav__link link--gradient link--border-hover" href="@Url.Action("Index","Home")#contact">Kontakt</a></li>
+        <li class="nav__item"><a class="nav__link link--gradient link--border-hover" asp-controller="Home" asp-action="Index" asp-fragment="courses">Kurzy</a></li>
+        <li class="nav__item"><a class="nav__link link--gradient link--border-hover" asp-controller="Blog" asp-action="Index">Blog</a></li>
+        <li class="nav__item"><a class="nav__link link--gradient link--border-hover" asp-controller="Home" asp-action="Index" asp-fragment="contact">Kontakt</a></li>
     </ul>
 </nav>

@@ -36,13 +36,15 @@ namespace vKurzuCore.Repositories
         public void Add(TEntity entity)
         {
             entity.Created = DateTime.Now;
+            entity.Changed = DateTime.Now;
             Context.Set<TEntity>().Add(entity);
         }
 
         public void AddRange(IEnumerable<TEntity> entities)
         {
             entities.ToList().ForEach(ent => {
-                ent.Created = DateTime.Now;               
+                ent.Created = DateTime.Now;
+                ent.Changed = DateTime.Now;
                 Context.Set<TEntity>().Add(ent);
             });
 

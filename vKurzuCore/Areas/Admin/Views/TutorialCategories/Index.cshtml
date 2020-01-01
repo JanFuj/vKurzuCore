@@ -1,17 +1,15 @@
-﻿@model IEnumerable<vKurzuCore.ViewModels.Dto.BlogDto>
+﻿@model IEnumerable<vKurzuCore.ViewModels.Dto.TutorialCategoryDto>
 @using vKurzuCore.Helpers
 
 @{
-    ViewBag.Title = "Admin Blog";
+    ViewBag.Title = "Admin Tutorial category";
 }
 
 <partial name="_adminLoginPartial" />
 <main class="main">
-
-
     <div class="admin-list-header">
-        <h1>Blog</h1>
-        <a class="button" asp-action="New">Nový blog</a>
+        <h1>Kategorie tutoriálu</h1>
+        <a class="button" asp-action="New">Nová kategorie</a>
     </div>
 
     <ul class="admin-list" id="sortable">
@@ -23,17 +21,17 @@
                 </div>
                 <div class="admin-list__cell admin-list__cell--buttons">
                     <a class="link--gradient" asp-action="Edit" asp-route-id="@item.Id">Upravit</a>
-                    <a class="link--gradient" asp-area="" asp-action="Detail" asp-controller="Blog" asp-route-urlTitle="@item.UrlTitle" asp-route-preview="true">Náhled</a>
+                    <a class="link--gradient" asp-area="" asp-action="Detail" asp-controller="TutorialCategory" asp-route-urlTitle="@item.UrlTitle" asp-route-preview="true">Náhled</a>
                     <a class="link--gradient" asp-action="Delete" asp-route-id="@item.Id">Smazat</a>
                     @if (User.IsInRole(Constants.Roles.Admin))
                     {
                         if (item.Approved)
                         {
-                            <a class="link--gradient" asp-action="ApproveBlog" asp-route-id="@item.Id" asp-route-approve="@false">Od-Publikovat</a>
+                            <a class="link--gradient" asp-action="ApproveTutorialCategory" asp-route-id="@item.Id" asp-route-approve="@false">Od-Publikovat</a>
                         }
                         else
                         {
-                            <a class="link--gradient" asp-action="ApproveBlog" asp-route-id="@item.Id" asp-route-approve="@true">Publikovat</a>
+                            <a class="link--gradient" asp-action="ApproveTutorialCategory" asp-route-id="@item.Id" asp-route-approve="@true">Publikovat</a>
                         }
                     }
                 </div>
@@ -68,7 +66,7 @@
                         $.ajax({
                             type: "POST",
                             contentType: "application/json; charset=utf-8",
-                            url: '@Url.Action("UpdateBlogOrder", "Admin")', //This is my url put your url here and pass model as data it is an array of my items
+                            url: '@Url.Action("UpdateTutorialCategoryOrder", "Admin")', //This is my url put your url here and pass model as data it is an array of my items
                             data: JSON.stringify(model),
                             success: function (data) {
                                 console.log("position changed");

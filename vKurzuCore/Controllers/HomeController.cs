@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using vKurzuCore.Models;
 using vKurzuCore.Repositories;
 using vKurzuCore.Services;
+using vKurzuCore.Services.Contracts;
 using vKurzuCore.ViewModels;
 
 namespace vKurzuCore.Controllers
@@ -16,23 +17,27 @@ namespace vKurzuCore.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMyEmailSender _emailSender;
+        private readonly ITutorialCategoryService _tutorialCategoryService;
         private readonly HomeViewModel _viewModel;
 
         public HomeController(
             ILogger<HomeController> logger,
             IMyEmailSender emailSender,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            ITutorialCategoryService tutorialCategoryService)
         {
             _logger = logger;
             _emailSender = emailSender;
             _unitOfWork = unitOfWork;
             _viewModel = new HomeViewModel();
+            _tutorialCategoryService = tutorialCategoryService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             _viewModel.Courses = _unitOfWork.Courses.GetPublishedCourses().ToList();
-            _viewModel.TutorialCategories = _unitOfWork.TutorialCategories.GetPublishedTutorialCategories().ToList();
+            var tutorialCategories = await _tutorialCategoryService.GetAllPublished();
+            _viewModel.TutorialCategories = tutorialCategories.ToList();
             _viewModel.Blogs = _unitOfWork.Blogs.GetFirst3BlogPosts().ToList();
             _viewModel.ShowAlert = !string.IsNullOrEmpty(TempData["EmailSent"]?.ToString());
             return View(_viewModel);
@@ -51,7 +56,7 @@ namespace vKurzuCore.Controllers
             {
                 TempData["EmailSent"] = "sent";
             }
-       
+
             return RedirectToAction(nameof(Index));
         }
         public IActionResult Privacy()

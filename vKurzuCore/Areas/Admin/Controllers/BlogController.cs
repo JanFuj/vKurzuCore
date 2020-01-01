@@ -129,5 +129,91 @@ namespace vKurzuCore.Areas.Admin.Controllers
             return View(viewModel);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("edit/{id}")]
+        public async Task<IActionResult> Edit(BlogViewModel viewModel)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var blogToUpdate = await _unitOfWork.Blogs.FindByIdAsync(viewModel.Blog.Id);
+                    if (blogToUpdate == null || (User.IsInRole(Constants.Roles.Lector) && blogToUpdate.OwnerId != _loggedUserId)) return NotFound();
+                    _mapper.Map(viewModel.Blog, blogToUpdate);
+                    var tagIds = await _tagParser.ParseTags(viewModel.Tagy);
+
+                    tagIds.ForEach(id =>
+                      blogToUpdate.BlogTags.Add(new BlogTag()
+                      {
+                          TagId = id,
+                          BlogId = blogToUpdate.Id
+                      }));
+                    await _unitOfWork.SaveAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            catch (DbUpdateException sqlEx) when (sqlEx.InnerException.HResult == (-2146232060))
+            {
+                ModelState.AddModelError("Blog.UrlTitle", "Zadane url již existuje");
+            }
+            catch (Exception e)
+            {
+                ModelState.AddModelError("", e.Message);
+            }
+            var tags = await _unitOfWork.Tags.GetAllAsync();
+            var courses = await _unitOfWork.Courses.GetAllAsync();
+
+            viewModel.Tags = tags.ToList();
+            viewModel.Courses = courses.Select(course => new CourseDto() { Id = course.Id, Name = course.Name }).ToList();
+
+            return View(viewModel);
+        }
+
+        [Route("delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var blogToDelete = await _unitOfWork.Blogs.FindByIdAsync(id);
+            if (blogToDelete == null || (User.IsInRole(Constants.Roles.Lector) && blogToDelete.OwnerId != _loggedUserId)) return NotFound();
+
+            var blogDto = new BlogDto()
+            {
+                Id = blogToDelete.Id,
+                Name = blogToDelete.Name,
+            };
+            return View(blogDto);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("delete/{id}")]
+        public async Task<IActionResult> Delete(BlogDto blogDto)
+        {
+            var blogToDelete = await _unitOfWork.Blogs.FindByIdAsync(blogDto.Id);
+            if (blogToDelete == null || (User.IsInRole(Constants.Roles.Lector) && blogToDelete.OwnerId != _loggedUserId)) return NotFound();
+            _unitOfWork.Blogs.Remove(blogToDelete);
+            await _unitOfWork.SaveAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize(Roles = Constants.Roles.Admin)]
+        [Route("approveblog")]
+        public async Task<IActionResult> ApproveBlog(int id, bool approve)
+        {
+            try
+            {
+                var blogToApprove = await _unitOfWork.Blogs.FindByIdAsync(id);
+                if (blogToApprove == null) return NotFound();
+
+                blogToApprove.Approved = approve;
+                await _unitOfWork.SaveAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
     }
 }

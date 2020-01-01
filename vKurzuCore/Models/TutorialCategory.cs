@@ -16,6 +16,6 @@ namespace vKurzuCore.Models
         public string UrlTitle { get; set; }
         public string HeaderImage { get; set; }
         public string SocialSharingImage { get; set; }
-        public List<TutorialPost> Posts { get; set; }
+        public List<TutorialPost> Posts { get; set; } = new List<TutorialPost>();
     }
 }

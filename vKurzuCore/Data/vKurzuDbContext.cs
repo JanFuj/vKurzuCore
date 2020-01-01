@@ -76,7 +76,15 @@ namespace vKurzuCore.Data
               .HasIndex(b => b.UrlTitle)
               .IsUnique();
 
-        }       
+            builder.Entity<TutorialCategory>()
+                .HasIndex(b => b.UrlTitle)
+                .IsUnique();
+
+            builder.Entity<TutorialPost>()
+                 .HasIndex(b => b.UrlTitle)
+                  .IsUnique();
+
+        }
 
     }
 }

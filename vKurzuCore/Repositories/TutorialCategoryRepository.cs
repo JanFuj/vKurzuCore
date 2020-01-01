@@ -20,9 +20,10 @@ namespace vKurzuCore.Repositories
 
         }
 
-        public IEnumerable<TutorialCategory> GetPublishedTutorialCategories()
+        public async Task<IEnumerable<TutorialCategory>> GetPublishedTutorialCategories()
         {
-            return vKurzuDbContext.TutorialCategories.Where(c => c.Approved && !c.Deleted).OrderBy(c => c.Position);
+            var allCategories = await GetAllAsync();
+            return allCategories.Where(c => c.Approved);
         }
     }
 }

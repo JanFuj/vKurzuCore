@@ -89,14 +89,15 @@
                     foreach (var blog in Model.Blogs)
                     {
                         <article class="article-preview">
-                            <h2 class="h4 article-preview__title"><a class="link--gradient-inversed" href="@Url.Action("Index", "Blog", new {title = blog.UrlTitle})">@blog.Name</a></h2>
+                            <h2 class="h4 article-preview__title"><a class="link--gradient-inversed" asp-action="Detail" asp-controller="Blog" asp-route-urlTitle="@blog.UrlTitle" >@blog.Name</a></h2>
                             <p class="article-preview__text">@blog.Description</p>
-                            <div class="article-preview__bottom-link"><a class="link--gradient link--border" href="@Url.Action("Index", "Blog", new {title = blog.UrlTitle})">Číst článek</a></div>
+                            <div class="article-preview__bottom-link"><a class="link--gradient link--border" asp-action="Detail" asp-controller="Blog" asp-route-urlTitle="@blog.UrlTitle">Číst článek</a></div>
                         </article>
                     }
                 }
             </div>
-            <div class="blog__link"><a class="link--gradient-inversed" href="@Url.Action("Index","Blog")">Všechny články →</a></div>
+
+            <div class="blog__link"><a class="link--gradient-inversed" asp-action="Index" asp-controller="Blog" >Všechny články →</a></div>
         </div>
     </article>
     <article class="contact" id="contact">

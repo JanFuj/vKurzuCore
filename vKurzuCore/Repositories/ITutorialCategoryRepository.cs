@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using vKurzuCore.Models;
 
 namespace vKurzuCore.Repositories
 {
     public interface ITutorialCategoryRepository : IRepository<TutorialCategory>
     {
-        IEnumerable<TutorialCategory> GetPublishedTutorialCategories();
+        Task<IEnumerable<TutorialCategory>> GetPublishedTutorialCategories();
     }
 }

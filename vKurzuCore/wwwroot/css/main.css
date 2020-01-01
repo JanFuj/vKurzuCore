@@ -3937,9 +3937,9 @@ header,
   .article-preview__text {
     color: var(--text-secondary); }
 
-/* .header--article {
-    background-color: var(--clr-shade-2);
-} */
+.header--article {
+  background-color: transparent; }
+
 .main--article {
   display: grid;
   grid-template-columns: var(--layout-columns);
@@ -3955,7 +3955,8 @@ header,
   /* p {
         color: var(--text-secondary);
     } */
-  grid-row-gap: 24px; }
+  grid-row-gap: 24px;
+  margin-top: calc(var(--header-height) * (-1)); }
   .main--article > * {
     grid-column: content-start / content-end; }
   @media (min-width: 480px) {
@@ -3986,18 +3987,15 @@ header,
 .article {
   --avatar-size: var(--base-4);
   --avatar-margin: var(--base);
-  grid-column: full-start / full-end;
-  /*  &__title {
-        @include fluidify(font-size, $font-size-h1-min, $font-size-h1-max*1.5);
-    } */ }
+  grid-column: full-start / full-end; }
   .article__header {
     display: grid;
     grid-template-columns: var(--article-columns);
     grid-column-gap: var(--gutter);
-    padding-top: var(--gutter);
     padding-bottom: var(--article-gap);
     text-align: left;
-    background: var(--top-grad); }
+    background: var(--top-grad);
+    position: relative; }
     .article__header > * {
       grid-column: content-start / content-end; }
     .article__header hr {
@@ -4013,6 +4011,24 @@ header,
           grid-column: content-start / full-end !important; } }
     .article__header p {
       color: var(--text-secondary); }
+  .article__image-wrapper {
+    grid-column: full-start / full-end;
+    height: calc(100vh + var(--header-height)); }
+  .article__image {
+    height: 100%;
+    object-fit: cover; }
+  .article__details-wrapper {
+    grid-column: wide-start / wide-end;
+    position: absolute;
+    bottom: 10vh; }
+  .article__title {
+    font-size: 36.25px; }
+    @media (min-width: 480px) {
+      .article__title {
+        font-size: calc(36.25px + 53.75 * (100vw - 480px) / 480); } }
+    @media (min-width: 960px) {
+      .article__title {
+        font-size: 90px; } }
   .article__content {
     display: grid;
     grid-template-columns: var(--article-columns);

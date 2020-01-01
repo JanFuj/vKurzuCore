@@ -39,6 +39,7 @@ namespace vKurzuCore.ViewModels.Dto
         public string SocialSharingImage { get; set; }
 
         public List<BlogTag> BlogTags { get; set; } = new List<BlogTag>();
+        public DateTime Changed { get; set; }
 
     }
 }

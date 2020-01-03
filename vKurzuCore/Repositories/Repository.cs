@@ -33,6 +33,11 @@ namespace vKurzuCore.Repositories
             return Context.Set<TEntity>().Where(predicate);
         }
 
+        public Task<TEntity> FindFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return Context.Set<TEntity>().Where(predicate).FirstOrDefaultAsync();
+        }
+
         public void Add(TEntity entity)
         {
             entity.Created = DateTime.Now;

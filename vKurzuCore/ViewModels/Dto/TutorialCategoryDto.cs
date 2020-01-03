@@ -24,5 +24,8 @@ namespace vKurzuCore.ViewModels.Dto
         [Display(Name = "Url obrazku pro sdílení na socíalech")]
         public string SocialSharingImage { get; set; }
         public bool Approved { get; set; }
+
+        public List<TutorialPostDto> Posts { get; set; } = new List<TutorialPostDto>();
+
     }
 }

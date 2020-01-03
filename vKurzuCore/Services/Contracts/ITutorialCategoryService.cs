@@ -17,5 +17,6 @@ namespace vKurzuCore.Services.Contracts
         Task<TutorialCategoryResponse> UpdateAsync(TutorialCategoryDto categoryDto);
         Task<TutorialCategoryResponse> DeleteAsync(int id);
         Task<TutorialCategoryResponse> ApproveAsync(int id, bool approve);
+        Task<TutorialCategory> FindPublishedByUrl(string urlTitle, bool preview);
     }
 }

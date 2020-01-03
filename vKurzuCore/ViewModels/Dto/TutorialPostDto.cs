@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+using vKurzuCore.Models;
 
-namespace vKurzuCore.Models
+namespace vKurzuCore.ViewModels.Dto
 {
-    public class TutorialPost : BaseModel
+    public class TutorialPostDto
     {
         [Required]
         public string Name { get; set; }
@@ -19,9 +17,11 @@ namespace vKurzuCore.Models
         [Required]
         public string UrlTitle { get; set; }
         public int RelatedCourseId { get; set; }
-        public Course RelatedCourse { get; set; }
+        public CourseDto RelatedCourse { get; set; }
         public List<TutorialPostTag> TutorialPostTags { get; set; }
         public int TutorialCategoryId { get; set; }
-        public TutorialCategory Category { get; set; }
+        public TutorialCategoryDto Category { get; set; }
+        public int Position { get; set; }
+
     }
 }

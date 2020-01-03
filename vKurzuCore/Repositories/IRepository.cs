@@ -17,6 +17,6 @@ namespace vKurzuCore.Repositories
 
         void Remove(TEntity entity);
         void RemoveRange(IEnumerable<TEntity> entities);
-
+        Task<TEntity> FindFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
     }
 }

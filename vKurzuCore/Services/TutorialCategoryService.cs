@@ -101,6 +101,14 @@ namespace vKurzuCore.Services
             return category;
         }
 
+        public async Task<TutorialCategory> FindPublishedByUrl(string urlTitle, bool preview)
+        {
+            if (preview)
+                return await _unitOfWork.TutorialCategories.GetPublishedCategoryDetailPreviewByUrl(urlTitle);
+
+            return await _unitOfWork.TutorialCategories.GetPublishedCategoryDetailByUrl(urlTitle);
+        }
+
         public async Task<IEnumerable<TutorialCategory>> GetAllAsync()
         {
             return await _unitOfWork.TutorialCategories.GetAllAsync();

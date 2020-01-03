@@ -12,7 +12,9 @@ namespace vKurzuCore.MappingProfiles
     {
         public TutorialCategoryProfile()
         {
-            CreateMap<TutorialCategory, TutorialCategoryDto>();
+            CreateMap<TutorialCategory, TutorialCategoryDto>()
+                .ForMember(dest => dest.Posts, opt => opt.MapFrom(src => src.Posts));
+
             CreateMap<TutorialCategoryDto, TutorialCategory>();
 
         }

@@ -1,0 +1,52 @@
+﻿@model vKurzuCore.ViewModels.Dto.TutorialCategoryDto
+@{
+    ViewBag.Title = "vKurzu.cz - " + Model.Name;
+    var latestPost = Model.Posts.OrderByDescending(item => item.Position).FirstOrDefault();
+}
+
+<header class="header header--up-top" id="site-header">
+    <partial name="_toolbar" />
+</header>
+
+<main class="main">
+    <div class="intro intro--tutorial">
+        <div class="tutorial-intro-texts">
+            <h1 class="tutorial-intro-title">@Model.Name</h1>
+            <p class="tutorial-intro-desc h5">@Model.Description</p>
+        </div>
+    </div>
+    @if (latestPost != null)
+    {
+        <h2 class="h5">Nejnovější</h2>
+        <article class="tutorial-latest-preview">
+            <a class="tutorial-preview__link" href=""></a>
+            <div class="tutorial-preview__left">
+                <img class="tutorial-preview__image" src="@latestPost.HeaderImage" alt="@latestPost.Name">
+            </div>
+            <div class="tutorial-preview__right">
+                <h1 class="tutorial-preview__title h2"><a class="link--gradient-inversed">@latestPost.Name</a></h1>
+                <p class="tutorial-preview__desc">@latestPost.Description</p>
+                <div class="tutorial-preview__bottom-link"><a class="link--gradient-inversed link--border" href="">Číst dále</a></div>
+            </div>
+        </article>
+    }
+    <h2 class="h5">Všechny díly</h2>
+    <ol class="tutorials-list">
+        @foreach (var post in Model.Posts)
+        {
+            <li class="tutorials-list__item">
+                <article class="tutorial-preview">
+                    <a class="tutorial-preview__link" href=""></a>
+                    <div class="tutorial-preview__left">
+                        <img class="tutorial-preview__image" src="@post.HeaderImage" alt="@post.Name">
+                    </div>
+                    <div class="tutorial-preview__right">
+                        <h1 class="tutorial-preview__title h3"><a class="link--gradient-inversed" href="">@post.Name</a></h1>
+                        <p class="tutorial-preview__desc">@post.Description</p>
+                        <div class="tutorial-preview__bottom-link"><a class="link--gradient link--border" href="">Číst dále</a></div>
+                    </div>
+                </article>
+            </li>
+        }
+    </ol>
+</main>

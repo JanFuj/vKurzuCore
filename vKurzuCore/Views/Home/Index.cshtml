@@ -28,21 +28,21 @@
             @{
                 foreach (var course in Model.Courses)
                 {
-                        <div class="course-card" data-gradient="@course.Modificator">
-                            <a class="course-card__link" asp-action="Detail" asp-controller="Course" asp-route-urlTitle="@course.UrlTitle"></a>
-                            <div class="course-card__content">
-                                <div class="course-card__image">
-                                    <svg viewBox="0 0 128 128">
-                                        <linearGradient id="@course.Modificator" x1="0%" y1="0%" x2="66%" y2="100%"><stop offset="0%" stop-color="var(--grad-1)" /><stop offset="100%" stop-color="var(--grad-2)" /></linearGradient>
-                                        @Html.Raw(course.Svg?.Path)
-                                    </svg>
-                                </div>
-                                <div class="course-card__info">
-                                    <h2 class="h4 course-card__title"><a class="course-card__title-link">@course.Name</a></h2>
-                                    <p class="course-card__desc">@course.Description</p>
-                                </div>
+                    <div class="course-card" data-gradient="@course.Modificator">
+                        <a class="course-card__link" asp-action="Detail" asp-controller="Course" asp-route-urlTitle="@course.UrlTitle"></a>
+                        <div class="course-card__content">
+                            <div class="course-card__image">
+                                <svg viewBox="0 0 128 128">
+                                    <linearGradient id="@course.Modificator" x1="0%" y1="0%" x2="66%" y2="100%"><stop offset="0%" stop-color="var(--grad-1)" /><stop offset="100%" stop-color="var(--grad-2)" /></linearGradient>
+                                    @Html.Raw(course.Svg?.Path)
+                                </svg>
+                            </div>
+                            <div class="course-card__info">
+                                <h2 class="h4 course-card__title"><a class="course-card__title-link">@course.Name</a></h2>
+                                <p class="course-card__desc">@course.Description</p>
                             </div>
                         </div>
+                    </div>
                 }
             }
         </div>
@@ -61,14 +61,14 @@
                         {
                             <li class="tutorials-list__item">
                                 <article class="tutorial-preview">
-                                    <a class="tutorial-preview__link" href="@Url.Action("TutorialCategoryPosts", "Tutorials", new {categoryTitle =category.UrlTitle})"></a>
+                                    <a class="tutorial-preview__link" asp-action="Detail" asp-controller="Tutorial" asp-route-urlTitle="@category.UrlTitle"></a>
                                     <div class="tutorial-preview__left">
                                         <img class="tutorial-preview__image" src="@category.HeaderImage" alt="Popis, co je na obrázku">
                                     </div>
                                     <div class="tutorial-preview__right">
-                                        <h1 class="tutorial-preview__title h3"><a class="link--gradient-inversed" href="@Url.Action("TutorialCategoryPosts", "Tutorials", new {categoryTitle =category.UrlTitle})">@category.Name</a></h1>
+                                        <h1 class="tutorial-preview__title h3"><a class="link--gradient-inversed" asp-action="Detail" asp-controller="Tutorial" asp-route-urlTitle="@category.UrlTitle">@category.Name</a></h1>
                                         <p class="tutorial-preview__desc">@category.Description</p>
-                                        <div class="tutorial-preview__bottom-link"><a class="link--gradient link--border" href="@Url.Action("TutorialCategoryPosts", "Tutorials", new {categoryTitle =category.UrlTitle})">To chci umět</a></div>
+                                        <div class="tutorial-preview__bottom-link"><a class="link--gradient link--border" asp-action="Detail" asp-controller="Tutorial" asp-route-urlTitle="@category.UrlTitle">To chci umět</a></div>
                                     </div>
                                 </article>
                             </li>
@@ -89,7 +89,7 @@
                     foreach (var blog in Model.Blogs)
                     {
                         <article class="article-preview">
-                            <h2 class="h4 article-preview__title"><a class="link--gradient-inversed" asp-action="Detail" asp-controller="Blog" asp-route-urlTitle="@blog.UrlTitle" >@blog.Name</a></h2>
+                            <h2 class="h4 article-preview__title"><a class="link--gradient-inversed" asp-action="Detail" asp-controller="Blog" asp-route-urlTitle="@blog.UrlTitle">@blog.Name</a></h2>
                             <p class="article-preview__text">@blog.Description</p>
                             <div class="article-preview__bottom-link"><a class="link--gradient link--border" asp-action="Detail" asp-controller="Blog" asp-route-urlTitle="@blog.UrlTitle">Číst článek</a></div>
                         </article>
@@ -97,7 +97,7 @@
                 }
             </div>
 
-            <div class="blog__link"><a class="link--gradient-inversed" asp-action="Index" asp-controller="Blog" >Všechny články →</a></div>
+            <div class="blog__link"><a class="link--gradient-inversed" asp-action="Index" asp-controller="Blog">Všechny články →</a></div>
         </div>
     </article>
     <article class="contact" id="contact">

@@ -10,6 +10,7 @@ namespace vKurzuCore.Repositories
         IAdminNoteRepository AdminNotes { get; }
         ICourseRepository Courses { get; }
         ITutorialCategoryRepository TutorialCategories { get; }
+        ITutorialPostRepository TutorialPosts { get; }
         IBlogRepository Blogs { get; }
         ISvgRepository Svgs { get; }
         IImageRepository Images { get; }

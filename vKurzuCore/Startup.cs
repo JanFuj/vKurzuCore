@@ -85,6 +85,7 @@ namespace vKurzuCore
 
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
             services.AddScoped(typeof(ITutorialCategoryService), typeof(TutorialCategoryService));
+            services.AddScoped(typeof(ITutorialPostService), typeof(TutorialPostService));
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IMyEmailSender, EmailSender>();

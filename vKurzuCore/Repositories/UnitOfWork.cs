@@ -12,6 +12,7 @@ namespace vKurzuCore.Repositories
 
         public ICourseRepository Courses { get; private set; }
         public ITutorialCategoryRepository TutorialCategories { get; private set; }
+        public ITutorialPostRepository TutorialPosts { get; private set; }
         public IBlogRepository Blogs { get; private set; }
         public ISvgRepository Svgs { get; private set; }
         public IImageRepository Images { get; private set; }
@@ -28,6 +29,7 @@ namespace vKurzuCore.Repositories
             Svgs = new SvgRepository(_context);
             Images = new ImageRepository(_context);
             Tags = new TagRepository(_context);
+            TutorialPosts = new TutorialPostRepository(_context);
         }
         public int Save()
         {

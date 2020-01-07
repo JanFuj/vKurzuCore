@@ -1,39 +1,36 @@
-﻿@model IEnumerable<vKurzuCore.ViewModels.Dto.TutorialCategoryDto>
+﻿@model vKurzuCore.ViewModels.TutorialPost.TutorialPostViewModel
 @using vKurzuCore.Helpers
 
 @{
-    ViewBag.Title = "Admin Tutorial category";
+    ViewBag.Title = "Admin Tutorial Posts";
 }
 
 <partial name="_adminLoginPartial" />
 <main class="main">
     <div class="admin-list-header">
-        <h1>Kategorie tutoriálu</h1>
-        <a class="button" asp-action="New">Nová kategorie</a>
+        <h1>Články v kategorii @Model.CategoryName</h1>
+        <a class="button" asp-action="New" asp-route-categoryId="@Model.Category.Id">Nový článek</a>
     </div>
-
     <ul class="admin-list" id="sortable">
-        @foreach (var item in Model)
+        @foreach (var item in Model.Posts)
         {
             <li class="admin-list__item" id="@item.Id">
                 <div class="admin-list__cell admin-list__cell--info">
-                    <div class="">
-                        <a class="" asp-action="Index" asp-controller="TutorialPost" asp-route-categoryId="@item.Id">@item.Name</a>
-                    </div>
+                    <div class="">@Html.DisplayFor(modelItem => item.Name)</div>
                 </div>
                 <div class="admin-list__cell admin-list__cell--buttons">
                     <a class="link--gradient" asp-action="Edit" asp-route-id="@item.Id">Upravit</a>
-                    <a class="link--gradient" asp-area="" asp-action="Detail" asp-controller="TutorialCategory" asp-route-urlTitle="@item.UrlTitle" asp-route-preview="true">Náhled</a>
+                    <a class="link--gradient" asp-area="" asp-action="Detail" asp-controller="TutorialPost" asp-route-urlTitle="@item.UrlTitle" asp-route-preview="true">Náhled</a>
                     <a class="link--gradient" asp-action="Delete" asp-route-id="@item.Id">Smazat</a>
                     @if (User.IsInRole(Constants.Roles.Admin))
                     {
                         if (item.Approved)
                         {
-                            <a class="link--gradient" asp-action="ApproveTutorialCategory" asp-route-id="@item.Id" asp-route-approve="@false">Od-Publikovat</a>
+                            <a class="link--gradient" asp-action="ApproveTutorialPost" asp-route-id="@item.Id" asp-route-approve="@false">Od-Publikovat</a>
                         }
                         else
                         {
-                            <a class="link--gradient" asp-action="ApproveTutorialCategory" asp-route-id="@item.Id" asp-route-approve="@true">Publikovat</a>
+                            <a class="link--gradient" asp-action="ApproveTutorialPost" asp-route-id="@item.Id" asp-route-approve="@true">Publikovat</a>
                         }
                     }
                 </div>
@@ -68,7 +65,7 @@
                         $.ajax({
                             type: "POST",
                             contentType: "application/json; charset=utf-8",
-                            url: '@Url.Action("UpdateTutorialCategoryOrder", "Admin")', //This is my url put your url here and pass model as data it is an array of my items
+                            url: '@Url.Action("UpdateTutorialPostOrder", "Admin")', //This is my url put your url here and pass model as data it is an array of my items
                             data: JSON.stringify(model),
                             success: function (data) {
                                 console.log("position changed");

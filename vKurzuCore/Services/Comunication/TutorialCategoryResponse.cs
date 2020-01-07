@@ -6,7 +6,7 @@ using vKurzuCore.Models;
 
 namespace vKurzuCore.Services.Comunication
 {
-    public class TutorialCategoryResponse : BaseResponse
+    public class TutorialCategoryResponse : Response
     {
         public TutorialCategory Category { get; private set; }
 

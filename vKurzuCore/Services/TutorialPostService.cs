@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using vKurzuCore.Helpers;
 using vKurzuCore.Helpers.Contracts;
 using vKurzuCore.Models;
 using vKurzuCore.Repositories;
@@ -108,6 +109,104 @@ namespace vKurzuCore.Services.Contracts
             };
 
             return viewModel;
+        }
+
+        public async Task<TutorialPostViewModel> GetEditPostViewModel(int id, TutorialPostDto editedPost = null)
+        {
+            var postToEdit = await _unitOfWork.TutorialPosts.FindByIdAsync(id);
+            if (postToEdit == null)
+                return null;
+            var category = await GetCategoryAsync(postToEdit.TutorialCategoryId);
+            if (category == null)
+                return null;
+
+            var tags = await _unitOfWork.Tags.GetAllAsync();
+            var courses = await _unitOfWork.Courses.GetAllAsync();
+            var post = _mapper.Map<TutorialPostDto>(postToEdit);
+
+            if (editedPost != null)
+            {
+                post = editedPost;
+            }
+            var viewModel = new TutorialPostViewModel()
+            {
+                CategoryName = category.Name,
+                Post = post,
+                Tags = tags.ToList(),
+                Courses = courses.Select(course => new CourseDto() { Id = course.Id, Name = course.Name }).ToList(),
+            };
+
+            return viewModel;
+        }
+
+        public async Task<Response> UpdateAsync(TutorialPostViewModel viewModel)
+        {
+            var postToUpdate = await _unitOfWork.TutorialPosts.FindByIdAsync(viewModel.Post.Id);
+            if (!await IsUrlUniqueInCategory(viewModel.Post))
+                return new Response($"Zadane url již existuje", "Post.UrlTitle");
+            // when category is loaded, ef automatically fills post.category relation object, then it requires it to be not null in post, otherwise will delet
+            //var category = await GetCategoryAsync(viewModel.Post.TutorialCategoryId);
+            //if (category == null)
+            //    return new Response($"Kategorie nebyla nalezena", "");
+            if (postToUpdate == null || (_loggedUser.IsInRole(Constants.Roles.Lector) && postToUpdate.OwnerId != _loggedUserId)) return null;
+            try
+            {
+                _mapper.Map(viewModel.Post, postToUpdate);
+                // ef will delete post instead of update when category == null
+             //  postToUpdate.Category = category; 
+                var tagIds = await _tagParser.ParseTags(viewModel.Tagy);
+
+                tagIds.ForEach(id =>
+                  postToUpdate.TutorialPostTags.Add(new TutorialPostTag()
+                  {
+                      TagId = id,
+                      TutorialPostId = postToUpdate.Id
+                  }));
+
+
+                await _unitOfWork.SaveAsync();
+                return new Response();
+            }
+            catch (Exception ex)
+            {
+                return new Response($"An error occurred when saving the category: {ex.Message}", "");
+            }
+        }
+
+        public async Task<TutorialPost> FindByIdAsync(int id, bool includeCategory = false)
+        {
+            TutorialPost post;
+            if (includeCategory)
+            {
+                post = await _unitOfWork.TutorialPosts.FindByIdAsyncIncludeCategory(id);
+            }
+            else
+            {
+                post = await _unitOfWork.TutorialPosts.FindByIdAsync(id);
+            }
+            if (_loggedUser.IsInRole(Constants.Roles.Lector))
+            {
+                if (post?.OwnerId != _loggedUserId)
+                    post = null;
+            }
+            return post;
+        }
+
+        public async Task<Response> DeleteAsync(int id)
+        {
+            try
+            {
+                var postToDelete = await FindByIdAsync(id);
+                if (postToDelete == null)
+                    return null;
+                _unitOfWork.TutorialPosts.Remove(postToDelete);
+                await _unitOfWork.SaveAsync();
+                return new Response();
+            }
+            catch (Exception ex)
+            {
+                return new Response($"An error occurred when deleting tutorial post: {ex.Message}", "");
+            }
         }
     }
 }

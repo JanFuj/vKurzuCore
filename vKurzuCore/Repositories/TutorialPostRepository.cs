@@ -33,5 +33,16 @@ namespace vKurzuCore.Repositories
                 .Include("TutorialPostTags.Tag")
                 .Where(x => x.TutorialCategoryId == categoryId && !x.Deleted && x.Approved).ToListAsync();
         }
+        public override Task<TutorialPost> FindByIdAsync(int id)
+        {
+            return vKurzuDbContext.TutorialPosts.Include("TutorialPostTags.Tag")
+                 .SingleOrDefaultAsync(x => x.Id == id && !x.Deleted);
+        }
+
+        public Task<TutorialPost> FindByIdAsyncIncludeCategory(int id)
+        {
+            return vKurzuDbContext.TutorialPosts.Include(x=>x.Category)
+                 .SingleOrDefaultAsync(x => x.Id == id && !x.Deleted);
+        }
     }
 }

@@ -10,5 +10,6 @@ namespace vKurzuCore.Repositories
     {
         Task<IEnumerable<TutorialPost>> GetPostsByCategoryAsync(int categoryId);
         Task<IEnumerable<TutorialPost>> GetApprovedPostsByCategoryAsync(int categoryId);
+        Task<TutorialPost> FindByIdAsyncIncludeCategory(int id);
     }
 }

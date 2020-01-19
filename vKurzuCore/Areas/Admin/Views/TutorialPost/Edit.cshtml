@@ -1,0 +1,127 @@
+﻿@model vKurzuCore.ViewModels.TutorialPost.TutorialPostViewModel
+@{
+    ViewBag.Title = "Upravit članek tutorialu";
+}
+
+<partial name="_adminLoginPartial" />
+<main class="main main--admin-form">
+    <h1>Upravit nový článek v kategorii @Model.CategoryName</h1>
+    <form class="admin-form" asp-controller="TutorialPost" asp-action="Edit" method="post" id="mySubmitForm">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input hidden asp-for="@Model.Post.Id" />
+        <input hidden asp-for="@Model.Post.TutorialCategoryId" />
+
+        <p class="form-item">
+            <label asp-for="@Model.Post.Name"></label>
+            <input asp-for="@Model.Post.Name" />
+            <span asp-validation-for="@Model.Post.Name" class="text-danger"></span>
+        </p>
+        <p class="form-item">
+            <label asp-for="@Model.Post.Description"></label>
+            <input asp-for="@Model.Post.Description" />
+            <span asp-validation-for="@Model.Post.Description" class="text-danger"></span>
+        </p>
+        <p class="form-item">
+            <label asp-for="@Model.Post.Body"></label>
+            <input asp-for="@Model.Post.Body" hidden />
+            <span asp-validation-for="@Model.Post.Body" class="text-danger"></span>
+            <div class="quill-wrapper">
+                <div id="toolbar"></div>
+                <div id="editor"></div>
+            </div>
+        </p>
+        <p class="form-item">
+            <label asp-for="@Model.Post.UrlTitle"></label>
+            <input asp-for="@Model.Post.UrlTitle" />
+            <span asp-validation-for="@Model.Post.UrlTitle" class="text-danger"></span>
+        </p>
+
+        <p class="form-item">
+            <label asp-for="@Model.Post.RelatedCourseId"></label>
+            <select asp-for="@Model.Post.RelatedCourseId"
+                    asp-items="@(new SelectList(Model.Courses,"Id","Name"))">
+                <option>Vyberte kurz</option>
+            </select>
+            <span asp-validation-for="@Model.Post.RelatedCourseId" class="text-danger"></span>
+        </p>
+        <p class="form-item">
+            <label asp-for="@Model.Post.HeaderImage"></label>
+            <input asp-for="@Model.Post.HeaderImage" id="HeaderImage" />
+        </p>
+        <p class="form-item">
+            <img id="HeaderImagePlaceHolder" />
+        </p>
+        <p class="form-item">
+            <label asp-for="@Model.Post.SocialSharingImage"></label>
+            <input asp-for="@Model.Post.SocialSharingImage" id="SocialThumbnailImage" />
+        </p>
+        <p class="form-item">
+            <img id="SocialThumbnailImagePlaceHolder" />
+        </p>
+        <br />
+        <div style="display: inline-block; width: 100%;">
+            <div class="subject-info-box-1">
+                <select multiple="multiple" id='lstBox1' class="form-control">
+                    @foreach (var postTag in Model.Post.TutorialPostTags)
+                    {
+                        <option value="@postTag.TagId">@postTag.Tag?.Name</option>
+                    }
+                </select>
+            </div>
+
+            <div class="subject-info-arrows text-center">
+                <input type='button' id='btnRight' value=&gt; class="btn btn-default" />
+                <br />
+                <input type='button' id='btnLeft' value=&lt; class="btn btn-default" />
+                <br />
+            </div>
+
+            <div class="subject-info-box-2">
+                <select multiple="multiple" id='lstBox2' class="form-control">
+                    @foreach (var tag in Model.Tags.Where(x => !Model.Post.TutorialPostTags.Select(x => x.TagId).Contains(x.Id)))
+                    {
+                        <option value="@tag.Id">@tag.Name</option>
+                    }
+                </select>
+            </div>
+            <div id="tags-output">
+                <label>tagy</label>
+
+                @Html.TextBoxFor(m => m.Tagy, "...", new { id = "tags", name = "Tagy", @readonly = "readonly" })
+
+            </div>
+        </div>
+        <br>
+        <button type="submit" id="save">Vytvořit</button>
+    </form>
+</main>
+
+@section scripts {
+
+    <script type="text/javascript">
+
+        let quill = new Quill('#editor',
+            {
+                modules: {
+                    toolbar: {
+                        container: toolbarOptions,
+                        handlers: {
+                            image: imageHandler
+                        },
+                        syntax: true
+                    }
+                },
+                theme: 'snow'
+            });
+        quill.setContents(@Html.Raw(Model.Post.Body))
+
+        var form = document.querySelector('#mySubmitForm');
+        form.onsubmit = function () {
+            console.log("submitted")
+            // Populate hidden form on submit
+            var description = document.querySelector('input[id=Post_Body]');
+            description.value = JSON.stringify(quill.getContents());
+            console.log("Submitted", $(form).serialize(), $(form).serializeArray());
+        };
+    </script>
+}

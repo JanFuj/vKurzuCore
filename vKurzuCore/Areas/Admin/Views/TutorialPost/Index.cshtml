@@ -19,9 +19,9 @@
                     <div class="">@Html.DisplayFor(modelItem => item.Name)</div>
                 </div>
                 <div class="admin-list__cell admin-list__cell--buttons">
-                    <a class="link--gradient" asp-action="Edit" asp-route-id="@item.Id">Upravit</a>
+                    <a class="link--gradient" asp-action="Edit" asp-route-id="@item.Id" asp-route-categoryId="@Model.Category.Id">Upravit</a>
                     <a class="link--gradient" asp-area="" asp-action="Detail" asp-controller="TutorialPost" asp-route-urlTitle="@item.UrlTitle" asp-route-preview="true">Náhled</a>
-                    <a class="link--gradient" asp-action="Delete" asp-route-id="@item.Id">Smazat</a>
+                    <a class="link--gradient" asp-action="Delete" asp-route-id="@item.Id" asp-route-categoryId="@Model.Category.Id">Smazat</a>
                     @if (User.IsInRole(Constants.Roles.Admin))
                     {
                         if (item.Approved)

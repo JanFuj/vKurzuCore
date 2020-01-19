@@ -27,5 +27,9 @@ namespace vKurzuCore.Services.Contracts
         /// <returns></returns>
         Task<TutorialPostViewModel> GetNewPostViewModel(int categoryId, TutorialPostDto existingPost = null);
         Task<Response> CreateAsync(TutorialPostViewModel viewModel);
+        Task<TutorialPostViewModel> GetEditPostViewModel(int id, TutorialPostDto existingPost = null);
+        Task<Response> UpdateAsync(TutorialPostViewModel viewModel);
+        Task<TutorialPost> FindByIdAsync(int id,bool includeCategory = false);
+        Task<Response> DeleteAsync(int id);
     }
 }

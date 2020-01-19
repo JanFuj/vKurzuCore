@@ -13,7 +13,10 @@ namespace vKurzuCore.MappingProfiles
         public TutorialPostProfile()
         {
             CreateMap<TutorialPost, TutorialPostDto>();
-            CreateMap<TutorialPostDto, TutorialPost>();
+             
+            CreateMap<TutorialPostDto, TutorialPost>()
+                 .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category));
+
         }
     }
 }

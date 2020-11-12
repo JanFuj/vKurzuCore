@@ -30,8 +30,18 @@ namespace vKurzuCore.Areas.Admin.Controllers
         public async Task<IActionResult> AdminNote(AdminNote adminNote)
         {
             var aNotes = await _unitOfWork.AdminNotes.GetAllAsync();
-            var aNote = aNotes.First();
-            aNote.Note = adminNote.Note;
+            var aNote = aNotes.FirstOrDefault();
+            if(aNote == null)
+            {
+                _unitOfWork.AdminNotes.Add(new AdminNote
+                {
+                    Note = adminNote.Note
+                });
+            }
+            else
+            {
+                aNote.Note = adminNote.Note;
+            }
             await _unitOfWork.SaveAsync();
             return RedirectToAction(nameof(Index));
         }

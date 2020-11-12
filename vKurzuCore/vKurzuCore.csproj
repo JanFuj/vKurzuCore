@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UserSecretsId>aspnet-vKurzuCore-DFEF1D2F-869A-4C4C-877D-FC5B4299C1F3</UserSecretsId>
+    <SatelliteResourceLanguages>cs</SatelliteResourceLanguages>
   </PropertyGroup>
 
 

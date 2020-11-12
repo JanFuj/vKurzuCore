@@ -149,7 +149,7 @@ namespace vKurzuCore.Areas.Admin.Controllers
                 await _unitOfWork.SaveAsync();
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return View(viewModel);
             }

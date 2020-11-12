@@ -36,9 +36,9 @@ namespace vKurzuCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var connectionString =Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<vKurzuDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(connectionString));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                  .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<vKurzuDbContext>();
@@ -103,7 +103,9 @@ namespace vKurzuCore
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                  app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
+               // app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }

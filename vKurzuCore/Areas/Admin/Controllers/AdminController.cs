@@ -22,7 +22,7 @@ namespace vKurzuCore.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             var adminNotes = await _unitOfWork.AdminNotes.GetAllAsync();
-            var adminNote = adminNotes.ToList().First();
+            var adminNote = adminNotes.ToList().FirstOrDefault();
             return View(adminNote);
         }
 
